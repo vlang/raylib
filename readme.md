@@ -6,7 +6,7 @@ Current Raylib Target: v5.5
 
 ## Installation
 
-`mkdir -p ~/.vmodules/emmathemartian/ && git clone https://github.com/emmathemartian/raylib-for-v ~/.vmodules/emmathemartian/raylib-for-v`
+`mkdir -p ~/.vmodules/emmathemartian/ && git clone https://github.com/emmathemartian/raylib-for-v ~/.vmodules/emmathemartian/raylib`
 
 ## Usage
 
