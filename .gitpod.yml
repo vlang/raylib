@@ -1,0 +1,3 @@
+tasks:
+  - name: "Init"
+    command: ./scripts/init.sh

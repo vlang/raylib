@@ -1,0 +1,15 @@
+plugins = [ '@/v' ]
+
+config:v_main = 'raylib_test.v'
+
+task:clean = {
+	run = 'rm -rf ${build_dir} && rm -rf raylib'
+}
+
+task:gen = {
+	run = 'python3 scripts/jsongen.py && python3 scripts/raygen.py'
+}
+
+task:deps = {
+	run = '${v} install'
+}
