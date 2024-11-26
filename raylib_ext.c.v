@@ -5,8 +5,13 @@
 
 module raylib
 
-struct C.rAudioBuffer { }
-struct C.rAudioProcessor { }
+#flag -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
+#include <raylib.h>
+
+@[typedef]
+pub struct C.va_list { }
+pub struct C.rAudioBuffer { }
+pub struct C.rAudioProcessor { }
 
 pub type AudioBuffer = C.rAudioBuffer
 pub type AudioProcessor = C.rAudioProcessor

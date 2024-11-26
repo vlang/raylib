@@ -41,13 +41,68 @@ c_to_v_types = {
 	"unsigned short": "u16",
 	"unsigned char": "u8",
 	"long": "i64",
+	"size_t": "C.size_t",
+	# Used by a trace log callback in raylib.h
 	"va_list": "C.va_list",
+	# Used in raylib.h to refer to raudio things
 	"rAudioBuffer": "AudioBuffer",
 	"rAudioProcessor": "AudioProcessor",
 	"ma_context": "C.ma_context",
 	"ma_device": "C.ma_device",
 	"ma_mutex": "C.ma_mutex",
-	"size_t": "C.size_t",
+	# From raymath.h
+	"float3": "Float3",
+	"float16": "Float16"
+}
+
+# See the comment rant for `module_imports`. All of that applies here too.
+ignored_structs = {
+	"raymath": [
+		"Vector2",
+		"Vector3",
+		"Vector4",
+		"Matrix",
+	],
+	"raygui": [
+		"Vector2",
+		"Vector3",
+		"Color",
+		"Rectangle",
+		"Texture2D",
+		"Image",
+		"GlyphInfo",
+		"Font",
+	]
+}
+
+ignored_aliases = {
+	"raymath": [
+		"Quaternion",
+	]
+}
+
+renamed_structs = {
+	"raymath": {
+		"float3": "Float3",
+		"float16": "Float16"
+	}
+}
+
+# Some modules depend on other modules, as expected. However Raylib's likes to
+# give all of its modules a "standalone" mode, which allows it to be compiled
+# without raylib.h being present. It does this by redefining the structs and
+# functions that it uses. This ends up getting clogged in our raylib_parser
+# JSONs, which we do not want. To fix this, we ignore the functions/structs/etc
+# from the generated bindings, but then we also need to import them from raylib
+# so that we can actually use them in the bindings.
+#
+# This variable stores those needed imports (and whatever other needed
+# boilerplate) on a per-module basis.
+#
+# (Rant over)
+module_boilerplates = {
+	"raymath": "import raylib { Vector2, Vector3, Vector4, Matrix }\n",
+	"raygui": "import raylib { Color, Font, Rectangle, Vector2, Vector3 }\n"
 }
 
 
@@ -88,7 +143,7 @@ def c_type_to_v_type(c_type: str, method_name: str = None) -> str:
 
 	return c_type
 
-def generate(path: str, json_path: str, lib: str, include: str):
+def generate(path: str, json_path: str, lib: str):
 	if not os.path.exists(json_path):
 		raise RuntimeError(f"{json_path} does not exist. You can generate it with scripts/jsongen.py")
 
@@ -96,11 +151,14 @@ def generate(path: str, json_path: str, lib: str, include: str):
 	if folder != "":
 		os.makedirs(folder, exist_ok = True)
 
-	raylib_module = path.removesuffix(".c.v")
+	raylib_module = path.split("/")[-1].removesuffix(".c.v")
 
 	# Parse JSON file and generate raylib.c.v
 	with open(path, "w+") as fp:
-		fp.write(f"module {lib}\n\n#flag -l{include}\n#include <{include}.h>\n\n")
+		fp.write(f"module {lib}\n")
+
+		if raylib_module in module_boilerplates:
+			fp.write(module_boilerplates[raylib_module])
 
 		data = None
 		with open(json_path, "r") as json_fp:
@@ -108,22 +166,27 @@ def generate(path: str, json_path: str, lib: str, include: str):
 		if data is None:
 			raise RuntimeError(f"Failed to load {json_path}")
 
-		# One of the callbacks uses va_list as a type, so we need to make a
-		# binding for it manually.
-		fp.write("@[typedef] struct C.va_list {}")
-
 		# Translate structs
 		for struct in data.get("structs", []):
-			name = struct["name"]
+			c_name = struct["name"]
+
+			if raylib_module in ignored_structs and c_name in ignored_structs[raylib_module]:
+				continue
+
+			v_name = struct["name"]
+			if raylib_module in renamed_structs and c_name in renamed_structs[raylib_module]:
+				v_name = renamed_structs[raylib_module][c_name]
+
 			fields = struct["fields"]
 
-			fp.write(f"pub type {name} = C.{name}\n")
+			fp.write(f"pub type {v_name} = C.{c_name}\n")
 			if struct["description"] != "":
 				fp.write(f"// {struct["description"]}\n")
-			fp.write(f"struct C.{name} {{\n")
+			fp.write(f"pub struct C.{c_name} {{\n")
 			for field in fields:
-				fp.write(f"\t// {field["description"]}\n")
-				fp.write(f"\t{field["name"]} {c_type_to_v_type(field["type"])}\n")
+				if field["description"] != "":
+					fp.write(f"\t// {field["description"]}\n")
+				fp.write(f"\t{pascal_to_snake(field["name"])} {c_type_to_v_type(field["type"])}\n")
 			fp.write('}\n\n')
 
 		# Translate aliases
@@ -200,7 +263,8 @@ def generate(path: str, json_path: str, lib: str, include: str):
 
 			# Now we write the binding to the file
 			fp.write(f"fn C.{c_name}({c_args}) {c_return_type}\n")
-			fp.write(f"// {comment}\n")
+			if comment != "":
+				fp.write(f"// {comment}\n")
 			fp.write(f"@[inline] pub fn {v_name}({decl_args}) {v_return_type} {{\n")
 			if v_return_type == "string":
 				fp.write("\tunsafe {")
@@ -216,6 +280,16 @@ def generate(path: str, json_path: str, lib: str, include: str):
 	os.system(f"v -w fmt {path}")
 
 if __name__ == "__main__":
-	# Generate our Raylib bindings
-	generate("raylib.c.v", "raylib/parser/raylib_api.json", "raylib", "raylib")
-	generate("raymath/raymath.c.v", "raylib/parser/raymath_api.json", "raymath", "raymath")
+	# Generate our Raylib, Raymath, and Raygui bindings
+	generate("raylib.c.v", "external/raylib/parser/raylib_api.json", "raylib")
+	generate("raymath/raymath.c.v", "external/raylib/parser/raymath_api.json", "raymath")
+	generate("raygui/raygui.c.v", "external/raylib/parser/raygui_api.json", "raygui")
+
+	# Raygui and Raymath are not distributed as a package like Raylib is.
+	# To use the libraries, we must redistribute their headers.
+	os.system("cp external/raygui/src/raygui.h raygui/raygui.h")
+	os.system("cp external/raylib/src/raymath.h raymath/raymath.h")
+	# We will also copy the licenses to the raygui/ and raymath/ directory
+	# since we include a source distribution of them.
+	os.system("cp external/raygui/LICENSE raygui/raygui-license")
+	os.system("cp external/raylib/LICENSE raymath/raymath-license")

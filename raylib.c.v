@@ -1,15 +1,9 @@
 module raylib
 
-#flag -lraylib
-#include <raylib.h>
-
-@[typedef]
-struct C.va_list {}
-
 pub type Vector2 = C.Vector2
 
 // Vector2, 2 components
-struct C.Vector2 {
+pub struct C.Vector2 {
 	// Vector x component
 	x f32
 	// Vector y component
@@ -19,7 +13,7 @@ struct C.Vector2 {
 pub type Vector3 = C.Vector3
 
 // Vector3, 3 components
-struct C.Vector3 {
+pub struct C.Vector3 {
 	// Vector x component
 	x f32
 	// Vector y component
@@ -31,7 +25,7 @@ struct C.Vector3 {
 pub type Vector4 = C.Vector4
 
 // Vector4, 4 components
-struct C.Vector4 {
+pub struct C.Vector4 {
 	// Vector x component
 	x f32
 	// Vector y component
@@ -45,7 +39,7 @@ struct C.Vector4 {
 pub type Matrix = C.Matrix
 
 // Matrix, 4x4 components, column major, OpenGL style, right-handed
-struct C.Matrix {
+pub struct C.Matrix {
 	// Matrix first row (4 components)
 	m0 f32
 	// Matrix first row (4 components)
@@ -83,7 +77,7 @@ struct C.Matrix {
 pub type Color = C.Color
 
 // Color, 4 components, R8G8B8A8 (32bit)
-struct C.Color {
+pub struct C.Color {
 	// Color red value
 	r u8
 	// Color green value
@@ -97,7 +91,7 @@ struct C.Color {
 pub type Rectangle = C.Rectangle
 
 // Rectangle, 4 components
-struct C.Rectangle {
+pub struct C.Rectangle {
 	// Rectangle top-left corner position x
 	x f32
 	// Rectangle top-left corner position y
@@ -111,7 +105,7 @@ struct C.Rectangle {
 pub type Image = C.Image
 
 // Image, pixel data stored in CPU memory (RAM)
-struct C.Image {
+pub struct C.Image {
 	// Image raw data
 	data voidptr
 	// Image base width
@@ -127,7 +121,7 @@ struct C.Image {
 pub type Texture = C.Texture
 
 // Texture, tex data stored in GPU memory (VRAM)
-struct C.Texture {
+pub struct C.Texture {
 	// OpenGL texture id
 	id u32
 	// Texture base width
@@ -143,7 +137,7 @@ struct C.Texture {
 pub type RenderTexture = C.RenderTexture
 
 // RenderTexture, fbo for texture rendering
-struct C.RenderTexture {
+pub struct C.RenderTexture {
 	// OpenGL framebuffer object id
 	id u32
 	// Color buffer attachment texture
@@ -155,7 +149,7 @@ struct C.RenderTexture {
 pub type NPatchInfo = C.NPatchInfo
 
 // NPatchInfo, n-patch layout info
-struct C.NPatchInfo {
+pub struct C.NPatchInfo {
 	// Texture source rectangle
 	source Rectangle
 	// Left border offset
@@ -173,15 +167,15 @@ struct C.NPatchInfo {
 pub type GlyphInfo = C.GlyphInfo
 
 // GlyphInfo, font characters glyphs info
-struct C.GlyphInfo {
+pub struct C.GlyphInfo {
 	// Character value (Unicode)
 	value int
 	// Character offset X when drawing
-	offsetX int
+	offset_x int
 	// Character offset Y when drawing
-	offsetY int
+	offset_y int
 	// Character advance position X
-	advanceX int
+	advance_x int
 	// Character image data
 	image Image
 }
@@ -189,13 +183,13 @@ struct C.GlyphInfo {
 pub type Font = C.Font
 
 // Font, font texture and GlyphInfo array data
-struct C.Font {
+pub struct C.Font {
 	// Base size (default chars height)
-	baseSize int
+	base_size int
 	// Number of glyph characters
-	glyphCount int
+	glyph_count int
 	// Padding around the glyph characters
-	glyphPadding int
+	glyph_padding int
 	// Texture atlas containing the glyphs
 	texture Texture2D
 	// Rectangles in texture for the glyphs
@@ -207,7 +201,7 @@ struct C.Font {
 pub type Camera3D = C.Camera3D
 
 // Camera, defines position/orientation in 3d space
-struct C.Camera3D {
+pub struct C.Camera3D {
 	// Camera position
 	position Vector3
 	// Camera target it looks-at
@@ -223,7 +217,7 @@ struct C.Camera3D {
 pub type Camera2D = C.Camera2D
 
 // Camera2D, defines position/orientation in 2d space
-struct C.Camera2D {
+pub struct C.Camera2D {
 	// Camera offset (displacement from target)
 	offset Vector2
 	// Camera target (rotation and zoom origin)
@@ -237,11 +231,11 @@ struct C.Camera2D {
 pub type Mesh = C.Mesh
 
 // Mesh, vertex data and vao/vbo
-struct C.Mesh {
+pub struct C.Mesh {
 	// Number of vertices stored in arrays
-	vertexCount int
+	vertex_count int
 	// Number of triangles stored (indexed or not)
-	triangleCount int
+	triangle_count int
 	// Vertex position (XYZ - 3 components per vertex) (shader-location = 0)
 	vertices &f32
 	// Vertex texture coordinates (UV - 2 components per vertex) (shader-location = 1)
@@ -257,27 +251,27 @@ struct C.Mesh {
 	// Vertex indices (in case vertex data comes indexed)
 	indices &u16
 	// Animated vertex positions (after bones transformations)
-	animVertices &f32
+	anim_vertices &f32
 	// Animated normals (after bones transformations)
-	animNormals &f32
+	anim_normals &f32
 	// Vertex bone ids, max 255 bone ids, up to 4 bones influence by vertex (skinning) (shader-location = 6)
-	boneIds &u8
+	bone_ids &u8
 	// Vertex bone weight, up to 4 bones influence by vertex (skinning) (shader-location = 7)
-	boneWeights &f32
+	bone_weights &f32
 	// Bones animated transformation matrices
-	boneMatrices &Matrix
+	bone_matrices &Matrix
 	// Number of bones
-	boneCount int
+	bone_count int
 	// OpenGL Vertex Array Object id
-	vaoId u32
+	vao_id u32
 	// OpenGL Vertex Buffer Objects id (default vertex data)
-	vboId &u32
+	vbo_id &u32
 }
 
 pub type Shader = C.Shader
 
 // Shader
-struct C.Shader {
+pub struct C.Shader {
 	// Shader program id
 	id u32
 	// Shader locations array (RL_MAX_SHADER_LOCATIONS)
@@ -287,7 +281,7 @@ struct C.Shader {
 pub type MaterialMap = C.MaterialMap
 
 // MaterialMap
-struct C.MaterialMap {
+pub struct C.MaterialMap {
 	// Material map texture
 	texture Texture2D
 	// Material map color
@@ -299,7 +293,7 @@ struct C.MaterialMap {
 pub type Material = C.Material
 
 // Material, includes shader and maps
-struct C.Material {
+pub struct C.Material {
 	// Material shader
 	shader Shader
 	// Material maps array (MAX_MATERIAL_MAPS)
@@ -311,7 +305,7 @@ struct C.Material {
 pub type Transform = C.Transform
 
 // Transform, vertex transformation data
-struct C.Transform {
+pub struct C.Transform {
 	// Translation
 	translation Vector3
 	// Rotation
@@ -323,7 +317,7 @@ struct C.Transform {
 pub type BoneInfo = C.BoneInfo
 
 // Bone, skeletal animation bone
-struct C.BoneInfo {
+pub struct C.BoneInfo {
 	// Bone name
 	name [32]u8
 	// Bone parent
@@ -333,39 +327,39 @@ struct C.BoneInfo {
 pub type Model = C.Model
 
 // Model, meshes, materials and animation data
-struct C.Model {
+pub struct C.Model {
 	// Local transform matrix
 	transform Matrix
 	// Number of meshes
-	meshCount int
+	mesh_count int
 	// Number of materials
-	materialCount int
+	material_count int
 	// Meshes array
 	meshes &Mesh
 	// Materials array
 	materials &Material
 	// Mesh material number
-	meshMaterial &int
+	mesh_material &int
 	// Number of bones
-	boneCount int
+	bone_count int
 	// Bones information (skeleton)
 	bones &BoneInfo
 	// Bones base transformation (pose)
-	bindPose &Transform
+	bind_pose &Transform
 }
 
 pub type ModelAnimation = C.ModelAnimation
 
 // ModelAnimation
-struct C.ModelAnimation {
+pub struct C.ModelAnimation {
 	// Number of bones
-	boneCount int
+	bone_count int
 	// Number of animation frames
-	frameCount int
+	frame_count int
 	// Bones information (skeleton)
 	bones &BoneInfo
 	// Poses array by frame
-	framePoses &&Transform
+	frame_poses &&Transform
 	// Animation name
 	name [32]u8
 }
@@ -373,7 +367,7 @@ struct C.ModelAnimation {
 pub type Ray = C.Ray
 
 // Ray, ray for raycasting
-struct C.Ray {
+pub struct C.Ray {
 	// Ray position (origin)
 	position Vector3
 	// Ray direction (normalized)
@@ -383,7 +377,7 @@ struct C.Ray {
 pub type RayCollision = C.RayCollision
 
 // RayCollision, ray hit information
-struct C.RayCollision {
+pub struct C.RayCollision {
 	// Did the ray hit something?
 	hit bool
 	// Distance to the nearest hit
@@ -397,7 +391,7 @@ struct C.RayCollision {
 pub type BoundingBox = C.BoundingBox
 
 // BoundingBox
-struct C.BoundingBox {
+pub struct C.BoundingBox {
 	// Minimum vertex box-corner
 	min Vector3
 	// Maximum vertex box-corner
@@ -407,13 +401,13 @@ struct C.BoundingBox {
 pub type Wave = C.Wave
 
 // Wave, audio wave data
-struct C.Wave {
+pub struct C.Wave {
 	// Total number of frames (considering channels)
-	frameCount u32
+	frame_count u32
 	// Frequency (samples per second)
-	sampleRate u32
+	sample_rate u32
 	// Bit depth (bits per sample): 8, 16, 32 (24 not supported)
-	sampleSize u32
+	sample_size u32
 	// Number of channels (1-mono, 2-stereo, ...)
 	channels u32
 	// Buffer data pointer
@@ -423,15 +417,15 @@ struct C.Wave {
 pub type AudioStream = C.AudioStream
 
 // AudioStream, custom audio stream
-struct C.AudioStream {
+pub struct C.AudioStream {
 	// Pointer to internal data used by the audio system
 	buffer &AudioBuffer
 	// Pointer to internal data processor, useful for audio effects
 	processor &AudioProcessor
 	// Frequency (samples per second)
-	sampleRate u32
+	sample_rate u32
 	// Bit depth (bits per sample): 8, 16, 32 (24 not supported)
-	sampleSize u32
+	sample_size u32
 	// Number of channels (1-mono, 2-stereo, ...)
 	channels u32
 }
@@ -439,79 +433,79 @@ struct C.AudioStream {
 pub type Sound = C.Sound
 
 // Sound
-struct C.Sound {
+pub struct C.Sound {
 	// Audio stream
 	stream AudioStream
 	// Total number of frames (considering channels)
-	frameCount u32
+	frame_count u32
 }
 
 pub type Music = C.Music
 
 // Music, audio stream, anything longer than ~10 seconds should be streamed
-struct C.Music {
+pub struct C.Music {
 	// Audio stream
 	stream AudioStream
 	// Total number of frames (considering channels)
-	frameCount u32
+	frame_count u32
 	// Music looping enable
 	looping bool
 	// Type of music context (audio filetype)
-	ctxType int
+	ctx_type int
 	// Audio context data, depends on type
-	ctxData voidptr
+	ctx_data voidptr
 }
 
 pub type VrDeviceInfo = C.VrDeviceInfo
 
 // VrDeviceInfo, Head-Mounted-Display device parameters
-struct C.VrDeviceInfo {
+pub struct C.VrDeviceInfo {
 	// Horizontal resolution in pixels
-	hResolution int
+	h_resolution int
 	// Vertical resolution in pixels
-	vResolution int
+	v_resolution int
 	// Horizontal size in meters
-	hScreenSize f32
+	h_screen_size f32
 	// Vertical size in meters
-	vScreenSize f32
+	v_screen_size f32
 	// Distance between eye and display in meters
-	eyeToScreenDistance f32
+	eye_to_screen_distance f32
 	// Lens separation distance in meters
-	lensSeparationDistance f32
+	lens_separation_distance f32
 	// IPD (distance between pupils) in meters
-	interpupillaryDistance f32
+	interpupillary_distance f32
 	// Lens distortion constant parameters
-	lensDistortionValues [4]f32
+	lens_distortion_values [4]f32
 	// Chromatic aberration correction parameters
-	chromaAbCorrection [4]f32
+	chroma_ab_correction [4]f32
 }
 
 pub type VrStereoConfig = C.VrStereoConfig
 
 // VrStereoConfig, VR stereo rendering configuration for simulator
-struct C.VrStereoConfig {
+pub struct C.VrStereoConfig {
 	// VR projection matrices (per eye)
 	projection [2]Matrix
 	// VR view offset matrices (per eye)
-	viewOffset [2]Matrix
+	view_offset [2]Matrix
 	// VR left lens center
-	leftLensCenter [2]f32
+	left_lens_center [2]f32
 	// VR right lens center
-	rightLensCenter [2]f32
+	right_lens_center [2]f32
 	// VR left screen center
-	leftScreenCenter [2]f32
+	left_screen_center [2]f32
 	// VR right screen center
-	rightScreenCenter [2]f32
+	right_screen_center [2]f32
 	// VR distortion scale
 	scale [2]f32
 	// VR distortion scale in
-	scaleIn [2]f32
+	scale_in [2]f32
 }
 
 pub type FilePathList = C.FilePathList
 
 // File path list
-struct C.FilePathList {
+pub struct C.FilePathList {
 	// Filepaths max entries
 	capacity u32
 	// Filepaths entries count
@@ -523,7 +517,7 @@ struct C.FilePathList {
 pub type AutomationEvent = C.AutomationEvent
 
 // Automation event
-struct C.AutomationEvent {
+pub struct C.AutomationEvent {
 	// Event frame
 	frame u32
 	// Event type (AutomationEventType)
@@ -535,7 +529,7 @@ struct C.AutomationEvent {
 pub type AutomationEventList = C.AutomationEventList
 
 // Automation event list
-struct C.AutomationEventList {
+pub struct C.AutomationEventList {
 	// Events max entries (MAX_AUTOMATION_EVENTS)
 	capacity u32
 	// Events entries count
