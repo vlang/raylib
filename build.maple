@@ -1,4 +1,4 @@
-plugins = [ '@/v' ]
+plugins = [ 'v' ]
 
 config:v_main = 'raylib_test.v'
 
