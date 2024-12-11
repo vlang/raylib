@@ -8,6 +8,12 @@ Current Raylib Target: v5.5
 
 `mkdir -p ~/.vmodules/emmathemartian/ && git clone https://github.com/emmathemartian/raylib-for-v ~/.vmodules/emmathemartian/raylib`
 
+> If you use `v install https://github.com/EmmaTheMartian/raylib-for-v` then it will be
+> downloaded to `~/.vmodules/raylib/`, meaning it will be imported as just `raylib`
+> instead of `emmathemartian.raylib`.
+
+Once VPM is unbugged, I will upload this package there.
+
 ## Usage
 
 Barring a small handful of differences, it is the exact same as Raylib's C API.
