@@ -521,7 +521,7 @@ pub struct C.AutomationEvent {
 	// Event frame
 	frame u32
 	// Event type (AutomationEventType)
-	type u32
+	typ u32
 	// Event parameters (if required)
 	params [4]int
 }
@@ -4154,9 +4154,9 @@ fn C.LoadFontData(&u8, int, int, &int, int, int) &GlyphInfo
 
 // Load font data for further use
 @[inline]
-pub fn load_font_data(file_data string, data_size int, font_size int, codepoints &int, codepoint_count int, type int) &GlyphInfo {
+pub fn load_font_data(file_data string, data_size int, font_size int, codepoints &int, codepoint_count int, typ int) &GlyphInfo {
 	return C.LoadFontData(file_data.str, data_size, font_size, codepoints, codepoint_count,
-		type)
+		typ)
 }
 
 fn C.GenImageFontAtlas(&GlyphInfo, &&Rectangle, int, int, int, int) Image

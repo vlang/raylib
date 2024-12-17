@@ -5,11 +5,11 @@ import re
 import sys
 
 
-pascal_to_snake_re = re.compile(r'(?<!^)(?=[A-Z])')
+translate_identifier_re = re.compile(r'(?<!^)(?=[A-Z])')
 
 # Functions with all-caps parts ("FPS", for example) become f_p_s normally, so
 # we prevent that by handling each "special case" that occurs in the Raylib API
-pascal_to_snake_special_cases = {
+translate_identifier_special_cases = {
 	"UTF8":   "_utf8",
 	"FPS":    "_fps",
 	"DPI":    "_dpi",
@@ -24,12 +24,12 @@ pascal_to_snake_special_cases = {
 	"CW":     "_cw",
 	"CCW":    "_ccw",
 	"NPatch": "_npatch",
-	"HSV":    "_hsv"
+	"HSV":    "_hsv",
 }
 
 varaidic_type_translations = {
 	"trace_log": "...TraceLogLevel",
-	"text_format": "...any"
+	"text_format": "...any",
 }
 
 c_to_v_types = {
@@ -52,7 +52,7 @@ c_to_v_types = {
 	"ma_mutex": "C.ma_mutex",
 	# From raymath.h
 	"float3": "Float3",
-	"float16": "Float16"
+	"float16": "Float16",
 }
 
 # See the comment rant for `module_imports`. All of that applies here too.
@@ -72,20 +72,25 @@ ignored_structs = {
 		"Image",
 		"GlyphInfo",
 		"Font",
-	]
+	],
 }
 
 ignored_aliases = {
 	"raymath": [
 		"Quaternion",
-	]
+	],
 }
 
 renamed_structs = {
 	"raymath": {
 		"float3": "Float3",
-		"float16": "Float16"
-	}
+		"float16": "Float16",
+	},
+}
+
+renamed_identifiers = {
+	"type": "typ",
+	"Type": "typ",
 }
 
 # Some modules depend on other modules, as expected. However Raylib's likes to
@@ -102,14 +107,16 @@ renamed_structs = {
 # (Rant over)
 module_boilerplates = {
 	"raymath": "import raylib { Vector2, Vector3, Vector4, Matrix }\n",
-	"raygui": "import raylib { Color, Font, Rectangle, Vector2, Vector3 }\n"
+	"raygui": "import raylib { Color, Font, Rectangle, Vector2, Vector3 }\n",
 }
 
 
-def pascal_to_snake(pascal: str) -> str:
-	for k, v in pascal_to_snake_special_cases.items():
+def translate_identifier(pascal: str) -> str:
+	if pascal in renamed_identifiers:
+		return renamed_identifiers[pascal]
+	for k, v in translate_identifier_special_cases.items():
 		pascal = pascal.replace(k, v)
-	return pascal_to_snake_re.sub('_', pascal).lower()
+	return translate_identifier_re.sub('_', pascal).lower()
 
 def c_type_to_v_type(c_type: str, method_name: str = None) -> str:
 	# Varaidic args are a pain because C does not declare types for them,
@@ -186,7 +193,7 @@ def generate(path: str, json_path: str, lib: str):
 			for field in fields:
 				if field["description"] != "":
 					fp.write(f"\t// {field["description"]}\n")
-				fp.write(f"\t{pascal_to_snake(field["name"])} {c_type_to_v_type(field["type"])}\n")
+				fp.write(f"\t{translate_identifier(field["name"])} {c_type_to_v_type(field["type"])}\n")
 			fp.write('}\n\n')
 
 		# Translate aliases
@@ -202,7 +209,7 @@ def generate(path: str, json_path: str, lib: str):
 			has_params = len(params) > 0
 			for param in params:
 				param["type"] = c_type_to_v_type(param["type"])
-				param["name"] = pascal_to_snake(param["name"])
+				param["name"] = translate_identifier(param["name"])
 
 			c_args = "" if not has_params else ", ".join([p["type"] for p in params])
 
@@ -224,7 +231,7 @@ def generate(path: str, json_path: str, lib: str):
 		# Bind functions
 		for function in data.get("functions", []):
 			c_name = function["name"]
-			v_name = pascal_to_snake(function["name"])
+			v_name = translate_identifier(function["name"])
 			c_return_type = c_type_to_v_type(function["returnType"])
 			v_return_type = c_type_to_v_type(function["returnType"])
 			comment = function["description"]
@@ -233,7 +240,7 @@ def generate(path: str, json_path: str, lib: str):
 			has_params = len(params) > 0
 			for param in params:
 				param["type"] = c_type_to_v_type(param["type"], v_name)
-				param["name"] = pascal_to_snake(param["name"])
+				param["name"] = translate_identifier(param["name"])
 
 			c_args = [p["type"] for p in params]
 			decl_args = [f"{p["name"]} {p["type"]}" for p in params]
