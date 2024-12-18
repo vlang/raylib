@@ -5,7 +5,8 @@
 
 module raylib
 
-#flag -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
+#flag linux -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
+#flag darwin -lraylib -lm -framework Foundation -framework AppKit -framework OpenGL -framework CoreVideo
 #include <raylib.h>
 
 @[typedef]
