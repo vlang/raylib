@@ -33,5 +33,6 @@ many Raylib bindings in general as far as I know.
 
 ## License
 
-Raylib for V is dual-licensed under MIT and the Unlicense. Use whichever works best for
-you! :D
+The Raylib headers are licensed under their respective licenses, which is Zlib.
+Everythign else is dual-licensed under MIT and the Unlicense. Use whichever works best
+for you! :D
