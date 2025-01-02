@@ -3,6 +3,7 @@ module main
 import raylib
 
 fn test_raylib() {
+	raylib.set_config_flags(raylib.ConfigFlags.flag_window_resizable)
 	raylib.init_window(800, 600, 'Hello, World!')
 	raylib.set_target_fps(30)
 

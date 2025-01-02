@@ -319,7 +319,7 @@ pub type BoneInfo = C.BoneInfo
 // Bone, skeletal animation bone
 pub struct C.BoneInfo {
 	// Bone name
-	name [32]u8
+	name [32]char
 	// Bone parent
 	parent int
 }
@@ -361,7 +361,7 @@ pub struct C.ModelAnimation {
 	// Poses array by frame
 	frame_poses &&Transform
 	// Animation name
-	name [32]u8
+	name [32]char
 }
 
 pub type Ray = C.Ray
@@ -511,7 +511,7 @@ pub struct C.FilePathList {
 	// Filepaths entries count
 	count u32
 	// Filepaths entries
-	paths &&u8
+	paths &&char
 }
 
 pub type AutomationEvent = C.AutomationEvent
@@ -554,40 +554,41 @@ pub type RenderTexture2D = C.RenderTexture
 pub type Camera = C.Camera3D
 
 // Logging: Redirect trace log messages
-pub type TraceLogCallback = fn (int, &u8, C.va_list)
+pub type TraceLogCallback = fn (int, &char, C.va_list)
 
 // FileIO: Load binary data
-pub type LoadFileDataCallback = fn (&u8, &int) &u8
+pub type LoadFileDataCallback = fn (&char, &int) &u8
 
 // FileIO: Save binary data
-pub type SaveFileDataCallback = fn (&u8, voidptr, int) bool
+pub type SaveFileDataCallback = fn (&char, voidptr, int) bool
 
 // FileIO: Load text data
-pub type LoadFileTextCallback = fn (&u8) &u8
+pub type LoadFileTextCallback = fn (&char) &char
 
 // FileIO: Save text data
-pub type SaveFileTextCallback = fn (&u8, &u8) bool
+pub type SaveFileTextCallback = fn (&char, &char) bool
 
 pub type AudioCallback = fn (voidptr, u32)
 
 // System/Window config flags
-pub enum ConfigFlags {
-	flag_vsync_hint               = 64    // Set to try enabling V-Sync on GPU
-	flag_fullscreen_mode          = 2     // Set to run program in fullscreen
-	flag_window_resizable         = 4     // Set to allow resizable window
-	flag_window_undecorated       = 8     // Set to disable window decoration (frame and buttons)
-	flag_window_hidden            = 128   // Set to hide window
-	flag_window_minimized         = 512   // Set to minimize window (iconify)
-	flag_window_maximized         = 1024  // Set to maximize window (expanded to monitor)
-	flag_window_unfocused         = 2048  // Set to window non focused
-	flag_window_topmost           = 4096  // Set to window always on top
-	flag_window_always_run        = 256   // Set to allow windows running while minimized
-	flag_window_transparent       = 16    // Set to allow transparent framebuffer
-	flag_window_highdpi           = 8192  // Set to support HighDPI
-	flag_window_mouse_passthrough = 16384 // Set to support mouse passthrough, only supported when FLAG_WINDOW_UNDECORATED
-	flag_borderless_windowed_mode = 32768 // Set to run program in borderless windowed mode
-	flag_msaa_4x_hint             = 32    // Set to try enabling MSAA 4X
-	flag_interlaced_hint          = 65536 // Set to try enabling interlaced video format (for V3D)
+@[flag]
+pub enum ConfigFlags as u32 {
+	flag_vsync_hint               // Set to try enabling V-Sync on GPU
+	flag_fullscreen_mode          // Set to run program in fullscreen
+	flag_window_resizable         // Set to allow resizable window
+	flag_window_undecorated       // Set to disable window decoration (frame and buttons)
+	flag_window_hidden            // Set to hide window
+	flag_window_minimized         // Set to minimize window (iconify)
+	flag_window_maximized         // Set to maximize window (expanded to monitor)
+	flag_window_unfocused         // Set to window non focused
+	flag_window_topmost           // Set to window always on top
+	flag_window_always_run        // Set to allow windows running while minimized
+	flag_window_transparent       // Set to allow transparent framebuffer
+	flag_window_highdpi           // Set to support HighDPI
+	flag_window_mouse_passthrough // Set to support mouse passthrough, only supported when FLAG_WINDOW_UNDECORATED
+	flag_borderless_windowed_mode // Set to run program in borderless windowed mode
+	flag_msaa_4x_hint             // Set to try enabling MSAA 4X
+	flag_interlaced_hint          // Set to try enabling interlaced video format (for V3D)
 }
 
 // Trace log level
@@ -918,18 +919,19 @@ pub enum BlendMode {
 }
 
 // Gesture
-pub enum Gesture {
-	gesture_none        = 0   // No gesture
-	gesture_tap         = 1   // Tap gesture
-	gesture_doubletap   = 2   // Double tap gesture
-	gesture_hold        = 4   // Hold gesture
-	gesture_drag        = 8   // Drag gesture
-	gesture_swipe_right = 16  // Swipe right gesture
-	gesture_swipe_left  = 32  // Swipe left gesture
-	gesture_swipe_up    = 64  // Swipe up gesture
-	gesture_swipe_down  = 128 // Swipe down gesture
-	gesture_pinch_in    = 256 // Pinch in gesture
-	gesture_pinch_out   = 512 // Pinch out gesture
+@[flag]
+pub enum Gesture as u32 {
+	gesture_none        // No gesture
+	gesture_tap         // Tap gesture
+	gesture_doubletap   // Double tap gesture
+	gesture_hold        // Hold gesture
+	gesture_drag        // Drag gesture
+	gesture_swipe_right // Swipe right gesture
+	gesture_swipe_left  // Swipe left gesture
+	gesture_swipe_up    // Swipe up gesture
+	gesture_swipe_down  // Swipe down gesture
+	gesture_pinch_in    // Pinch in gesture
+	gesture_pinch_out   // Pinch out gesture
 }
 
 // Camera system modes
@@ -954,7 +956,7 @@ pub enum NPatchLayout {
 	npatch_three_patch_horizontal = 2 // Npatch layout: 3x1 tiles
 }
 
-fn C.InitWindow(int, int, &u8)
+fn C.InitWindow(int, int, &char)
 
 // Initialize window and OpenGL context
 @[inline]
@@ -1034,27 +1036,27 @@ pub fn is_window_resized() bool {
 	return C.IsWindowResized()
 }
 
-fn C.IsWindowState(u32) bool
+fn C.IsWindowState(ConfigFlags) bool
 
 // Check if one specific window flag is enabled
 @[inline]
-pub fn is_window_state(flag u32) bool {
+pub fn is_window_state(flag ConfigFlags) bool {
 	return C.IsWindowState(flag)
 }
 
-fn C.SetWindowState(u32)
+fn C.SetWindowState(ConfigFlags)
 
 // Set window configuration state using flags
 @[inline]
-pub fn set_window_state(flags u32) {
+pub fn set_window_state(flags ConfigFlags) {
 	C.SetWindowState(flags)
 }
 
-fn C.ClearWindowState(u32)
+fn C.ClearWindowState(ConfigFlags)
 
 // Clear window configuration state flags
 @[inline]
-pub fn clear_window_state(flags u32) {
+pub fn clear_window_state(flags ConfigFlags) {
 	C.ClearWindowState(flags)
 }
 
@@ -1114,7 +1116,7 @@ pub fn set_window_icons(images &Image, count int) {
 	C.SetWindowIcons(images, count)
 }
 
-fn C.SetWindowTitle(&u8)
+fn C.SetWindowTitle(&char)
 
 // Set title for window
 @[inline]
@@ -1298,7 +1300,7 @@ pub fn get_window_scale_dpi() Vector2 {
 	return C.GetWindowScaleDPI()
 }
 
-fn C.GetMonitorName(int) &u8
+fn C.GetMonitorName(int) &char
 
 // Get the human-readable, UTF-8 encoded name of the specified monitor
 @[inline]
@@ -1308,7 +1310,7 @@ pub fn get_monitor_name(monitor int) string {
 	}
 }
 
-fn C.SetClipboardText(&u8)
+fn C.SetClipboardText(&char)
 
 // Set clipboard text content
 @[inline]
@@ -1316,7 +1318,7 @@ pub fn set_clipboard_text(text string) {
 	C.SetClipboardText(text.str)
 }
 
-fn C.GetClipboardText() &u8
+fn C.GetClipboardText() &char
 
 // Get clipboard text content
 @[inline]
@@ -1550,7 +1552,7 @@ pub fn unload_vr_stereo_config(config VrStereoConfig) {
 	C.UnloadVrStereoConfig(config)
 }
 
-fn C.LoadShader(&u8, &u8) Shader
+fn C.LoadShader(&char, &char) Shader
 
 // Load shader from files and bind default locations
 @[inline]
@@ -1558,7 +1560,7 @@ pub fn load_shader(vs_file_name string, fs_file_name string) Shader {
 	return C.LoadShader(vs_file_name.str, fs_file_name.str)
 }
 
-fn C.LoadShaderFromMemory(&u8, &u8) Shader
+fn C.LoadShaderFromMemory(&char, &char) Shader
 
 // Load shader from code strings and bind default locations
 @[inline]
@@ -1574,7 +1576,7 @@ pub fn is_shader_valid(shader Shader) bool {
 	return C.IsShaderValid(shader)
 }
 
-fn C.GetShaderLocation(Shader, &u8) int
+fn C.GetShaderLocation(Shader, &char) int
 
 // Get shader uniform location
 @[inline]
@@ -1582,7 +1584,7 @@ pub fn get_shader_location(shader Shader, uniform_name string) int {
 	return C.GetShaderLocation(shader, uniform_name.str)
 }
 
-fn C.GetShaderLocationAttrib(Shader, &u8) int
+fn C.GetShaderLocationAttrib(Shader, &char) int
 
 // Get shader attribute location
 @[inline]
@@ -1782,7 +1784,7 @@ pub fn unload_random_sequence(sequence &int) {
 	C.UnloadRandomSequence(sequence)
 }
 
-fn C.TakeScreenshot(&u8)
+fn C.TakeScreenshot(&char)
 
 // Takes a screenshot of current screen (filename extension defines format)
 @[inline]
@@ -1790,15 +1792,15 @@ pub fn take_screenshot(file_name string) {
 	C.TakeScreenshot(file_name.str)
 }
 
-fn C.SetConfigFlags(u32)
+fn C.SetConfigFlags(ConfigFlags)
 
 // Setup init configuration flags (view FLAGS)
 @[inline]
-pub fn set_config_flags(flags u32) {
+pub fn set_config_flags(flags ConfigFlags) {
 	C.SetConfigFlags(flags)
 }
 
-fn C.OpenURL(&u8)
+fn C.OpenURL(&char)
 
 // Open URL with default system browser (if available)
 @[inline]
@@ -1806,7 +1808,7 @@ pub fn open_url(url string) {
 	C.OpenURL(url.str)
 }
 
-fn C.TraceLog(int, &u8, ...TraceLogLevel)
+fn C.TraceLog(int, &char, ...TraceLogLevel)
 
 // Show trace log messages (LOG_DEBUG, LOG_INFO, LOG_WARNING, LOG_ERROR...)
 @[inline]
@@ -1886,25 +1888,23 @@ pub fn set_save_file_text_callback(callback SaveFileTextCallback) {
 	C.SetSaveFileTextCallback(callback)
 }
 
-fn C.LoadFileData(&u8, &int) &u8
+fn C.LoadFileData(&char, &int) &u8
 
 // Load file data as byte array (read)
 @[inline]
-pub fn load_file_data(file_name string, data_size &int) string {
-	unsafe {
-		return C.LoadFileData(file_name.str, data_size).vstring()
-	}
+pub fn load_file_data(file_name string, data_size &int) &u8 {
+	return C.LoadFileData(file_name.str, data_size)
 }
 
 fn C.UnloadFileData(&u8)
 
 // Unload file data allocated by LoadFileData()
 @[inline]
-pub fn unload_file_data(data string) {
-	C.UnloadFileData(data.str)
+pub fn unload_file_data(data &u8) {
+	C.UnloadFileData(data)
 }
 
-fn C.SaveFileData(&u8, voidptr, int) bool
+fn C.SaveFileData(&char, voidptr, int) bool
 
 // Save data to file from byte array (write), returns true on success
 @[inline]
@@ -1912,15 +1912,15 @@ pub fn save_file_data(file_name string, data voidptr, data_size int) bool {
 	return C.SaveFileData(file_name.str, data, data_size)
 }
 
-fn C.ExportDataAsCode(&u8, int, &u8) bool
+fn C.ExportDataAsCode(&u8, int, &char) bool
 
 // Export data to code (.h), returns true on success
 @[inline]
-pub fn export_data_as_code(data string, data_size int, file_name string) bool {
-	return C.ExportDataAsCode(data.str, data_size, file_name.str)
+pub fn export_data_as_code(data &u8, data_size int, file_name string) bool {
+	return C.ExportDataAsCode(data, data_size, file_name.str)
 }
 
-fn C.LoadFileText(&u8) &u8
+fn C.LoadFileText(&char) &char
 
 // Load text data from file (read), returns a '\0' terminated string
 @[inline]
@@ -1930,7 +1930,7 @@ pub fn load_file_text(file_name string) string {
 	}
 }
 
-fn C.UnloadFileText(&u8)
+fn C.UnloadFileText(&char)
 
 // Unload file text data allocated by LoadFileText()
 @[inline]
@@ -1938,7 +1938,7 @@ pub fn unload_file_text(text string) {
 	C.UnloadFileText(text.str)
 }
 
-fn C.SaveFileText(&u8, &u8) bool
+fn C.SaveFileText(&char, &char) bool
 
 // Save text data to file (write), string must be '\0' terminated, returns true on success
 @[inline]
@@ -1946,7 +1946,7 @@ pub fn save_file_text(file_name string, text string) bool {
 	return C.SaveFileText(file_name.str, text.str)
 }
 
-fn C.FileExists(&u8) bool
+fn C.FileExists(&char) bool
 
 // Check if file exists
 @[inline]
@@ -1954,7 +1954,7 @@ pub fn file_exists(file_name string) bool {
 	return C.FileExists(file_name.str)
 }
 
-fn C.DirectoryExists(&u8) bool
+fn C.DirectoryExists(&char) bool
 
 // Check if a directory path exists
 @[inline]
@@ -1962,7 +1962,7 @@ pub fn directory_exists(dir_path string) bool {
 	return C.DirectoryExists(dir_path.str)
 }
 
-fn C.IsFileExtension(&u8, &u8) bool
+fn C.IsFileExtension(&char, &char) bool
 
 // Check file extension (including point: .png, .wav)
 @[inline]
@@ -1970,7 +1970,7 @@ pub fn is_file_extension(file_name string, ext string) bool {
 	return C.IsFileExtension(file_name.str, ext.str)
 }
 
-fn C.GetFileLength(&u8) int
+fn C.GetFileLength(&char) int
 
 // Get file length in bytes (NOTE: GetFileSize() conflicts with windows.h)
 @[inline]
@@ -1978,7 +1978,7 @@ pub fn get_file_length(file_name string) int {
 	return C.GetFileLength(file_name.str)
 }
 
-fn C.GetFileExtension(&u8) &u8
+fn C.GetFileExtension(&char) &char
 
 // Get pointer to extension for a filename string (includes dot: '.png')
 @[inline]
@@ -1988,7 +1988,7 @@ pub fn get_file_extension(file_name string) string {
 	}
 }
 
-fn C.GetFileName(&u8) &u8
+fn C.GetFileName(&char) &char
 
 // Get pointer to filename for a path string
 @[inline]
@@ -1998,7 +1998,7 @@ pub fn get_file_name(file_path string) string {
 	}
 }
 
-fn C.GetFileNameWithoutExt(&u8) &u8
+fn C.GetFileNameWithoutExt(&char) &char
 
 // Get filename string without extension (uses static string)
 @[inline]
@@ -2008,7 +2008,7 @@ pub fn get_file_name_without_ext(file_path string) string {
 	}
 }
 
-fn C.GetDirectoryPath(&u8) &u8
+fn C.GetDirectoryPath(&char) &char
 
 // Get full path for a given fileName with path (uses static string)
 @[inline]
@@ -2018,7 +2018,7 @@ pub fn get_directory_path(file_path string) string {
 	}
 }
 
-fn C.GetPrevDirectoryPath(&u8) &u8
+fn C.GetPrevDirectoryPath(&char) &char
 
 // Get previous directory path for a given path (uses static string)
 @[inline]
@@ -2028,7 +2028,7 @@ pub fn get_prev_directory_path(dir_path string) string {
 	}
 }
 
-fn C.GetWorkingDirectory() &u8
+fn C.GetWorkingDirectory() &char
 
 // Get current working directory (uses static string)
 @[inline]
@@ -2038,7 +2038,7 @@ pub fn get_working_directory() string {
 	}
 }
 
-fn C.GetApplicationDirectory() &u8
+fn C.GetApplicationDirectory() &char
 
 // Get the directory of the running application (uses static string)
 @[inline]
@@ -2048,7 +2048,7 @@ pub fn get_application_directory() string {
 	}
 }
 
-fn C.MakeDirectory(&u8) int
+fn C.MakeDirectory(&char) int
 
 // Create directories (including full path requested), returns 0 on success
 @[inline]
@@ -2056,7 +2056,7 @@ pub fn make_directory(dir_path string) int {
 	return C.MakeDirectory(dir_path.str)
 }
 
-fn C.ChangeDirectory(&u8) bool
+fn C.ChangeDirectory(&char) bool
 
 // Change working directory, return true on success
 @[inline]
@@ -2064,7 +2064,7 @@ pub fn change_directory(dir string) bool {
 	return C.ChangeDirectory(dir.str)
 }
 
-fn C.IsPathFile(&u8) bool
+fn C.IsPathFile(&char) bool
 
 // Check if a given path is a file or a directory
 @[inline]
@@ -2072,7 +2072,7 @@ pub fn is_path_file(path string) bool {
 	return C.IsPathFile(path.str)
 }
 
-fn C.IsFileNameValid(&u8) bool
+fn C.IsFileNameValid(&char) bool
 
 // Check if fileName is valid for the platform/OS
 @[inline]
@@ -2080,7 +2080,7 @@ pub fn is_file_name_valid(file_name string) bool {
 	return C.IsFileNameValid(file_name.str)
 }
 
-fn C.LoadDirectoryFiles(&u8) FilePathList
+fn C.LoadDirectoryFiles(&char) FilePathList
 
 // Load directory filepaths
 @[inline]
@@ -2088,7 +2088,7 @@ pub fn load_directory_files(dir_path string) FilePathList {
 	return C.LoadDirectoryFiles(dir_path.str)
 }
 
-fn C.LoadDirectoryFilesEx(&u8, &u8, bool) FilePathList
+fn C.LoadDirectoryFilesEx(&char, &char, bool) FilePathList
 
 // Load directory filepaths with extension filtering and recursive directory scan. Use 'DIR' in the filter string to include directories in the result
 @[inline]
@@ -2128,7 +2128,7 @@ pub fn unload_dropped_files(files FilePathList) {
 	C.UnloadDroppedFiles(files)
 }
 
-fn C.GetFileModTime(&u8) i64
+fn C.GetFileModTime(&char) i64
 
 // Get file modification time (last write time)
 @[inline]
@@ -2140,29 +2140,25 @@ fn C.CompressData(&u8, int, &int) &u8
 
 // Compress data (DEFLATE algorithm), memory must be MemFree()
 @[inline]
-pub fn compress_data(data string, data_size int, comp_data_size &int) string {
-	unsafe {
-		return C.CompressData(data.str, data_size, comp_data_size).vstring()
-	}
+pub fn compress_data(data &u8, data_size int, comp_data_size &int) &u8 {
+	return C.CompressData(data, data_size, comp_data_size)
 }
 
 fn C.DecompressData(&u8, int, &int) &u8
 
 // Decompress data (DEFLATE algorithm), memory must be MemFree()
 @[inline]
-pub fn decompress_data(comp_data string, comp_data_size int, data_size &int) string {
-	unsafe {
-		return C.DecompressData(comp_data.str, comp_data_size, data_size).vstring()
-	}
+pub fn decompress_data(comp_data &u8, comp_data_size int, data_size &int) &u8 {
+	return C.DecompressData(comp_data, comp_data_size, data_size)
 }
 
-fn C.EncodeDataBase64(&u8, int, &int) &u8
+fn C.EncodeDataBase64(&u8, int, &int) &char
 
 // Encode data to Base64 string, memory must be MemFree()
 @[inline]
-pub fn encode_data_base64(data string, data_size int, output_size &int) string {
+pub fn encode_data_base64(data &u8, data_size int, output_size &int) string {
 	unsafe {
-		return C.EncodeDataBase64(data.str, data_size, output_size).vstring()
+		return C.EncodeDataBase64(data, data_size, output_size).vstring()
 	}
 }
 
@@ -2170,37 +2166,35 @@ fn C.DecodeDataBase64(&u8, &int) &u8
 
 // Decode Base64 string data, memory must be MemFree()
 @[inline]
-pub fn decode_data_base64(data string, output_size &int) string {
-	unsafe {
-		return C.DecodeDataBase64(data.str, output_size).vstring()
-	}
+pub fn decode_data_base64(data &u8, output_size &int) &u8 {
+	return C.DecodeDataBase64(data, output_size)
 }
 
 fn C.ComputeCRC32(&u8, int) u32
 
 // Compute CRC32 hash code
 @[inline]
-pub fn compute_crc32(data string, data_size int) u32 {
-	return C.ComputeCRC32(data.str, data_size)
+pub fn compute_crc32(data &u8, data_size int) u32 {
+	return C.ComputeCRC32(data, data_size)
 }
 
 fn C.ComputeMD5(&u8, int) &u32
 
 // Compute MD5 hash code, returns static int[4] (16 bytes)
 @[inline]
-pub fn compute_md5(data string, data_size int) &u32 {
-	return C.ComputeMD5(data.str, data_size)
+pub fn compute_md5(data &u8, data_size int) &u32 {
+	return C.ComputeMD5(data, data_size)
 }
 
 fn C.ComputeSHA1(&u8, int) &u32
 
 // Compute SHA1 hash code, returns static int[5] (20 bytes)
 @[inline]
-pub fn compute_sha1(data string, data_size int) &u32 {
-	return C.ComputeSHA1(data.str, data_size)
+pub fn compute_sha1(data &u8, data_size int) &u32 {
+	return C.ComputeSHA1(data, data_size)
 }
 
-fn C.LoadAutomationEventList(&u8) AutomationEventList
+fn C.LoadAutomationEventList(&char) AutomationEventList
 
 // Load automation events list from file, NULL for empty list, capacity = MAX_AUTOMATION_EVENTS
 @[inline]
@@ -2216,7 +2210,7 @@ pub fn unload_automation_event_list(list AutomationEventList) {
 	C.UnloadAutomationEventList(list)
 }
 
-fn C.ExportAutomationEventList(AutomationEventList, &u8) bool
+fn C.ExportAutomationEventList(AutomationEventList, &char) bool
 
 // Export automation events list as text file
 @[inline]
@@ -2336,7 +2330,7 @@ pub fn is_gamepad_available(gamepad int) bool {
 	return C.IsGamepadAvailable(gamepad)
 }
 
-fn C.GetGamepadName(int) &u8
+fn C.GetGamepadName(int) &char
 
 // Get gamepad internal name id
 @[inline]
@@ -2402,7 +2396,7 @@ pub fn get_gamepad_axis_movement(gamepad int, axis int) f32 {
 	return C.GetGamepadAxisMovement(gamepad, axis)
 }
 
-fn C.SetGamepadMappings(&u8) int
+fn C.SetGamepadMappings(&char) int
 
 // Set internal gamepad mappings (SDL_GameControllerDB)
 @[inline]
@@ -2570,11 +2564,11 @@ pub fn get_touch_point_count() int {
 	return C.GetTouchPointCount()
 }
 
-fn C.SetGesturesEnabled(u32)
+fn C.SetGesturesEnabled(Gesture)
 
 // Enable a set of gestures using flags
 @[inline]
-pub fn set_gestures_enabled(flags u32) {
+pub fn set_gestures_enabled(flags Gesture) {
 	C.SetGesturesEnabled(flags)
 }
 
@@ -3179,7 +3173,7 @@ pub fn get_collision_rec(rec1 Rectangle, rec2 Rectangle) Rectangle {
 	return C.GetCollisionRec(rec1, rec2)
 }
 
-fn C.LoadImage(&u8) Image
+fn C.LoadImage(&char) Image
 
 // Load image from file into CPU memory (RAM)
 @[inline]
@@ -3187,7 +3181,7 @@ pub fn load_image(file_name string) Image {
 	return C.LoadImage(file_name.str)
 }
 
-fn C.LoadImageRaw(&u8, int, int, int, int) Image
+fn C.LoadImageRaw(&char, int, int, int, int) Image
 
 // Load image from RAW file data
 @[inline]
@@ -3195,7 +3189,7 @@ pub fn load_image_raw(file_name string, width int, height int, format int, heade
 	return C.LoadImageRaw(file_name.str, width, height, format, header_size)
 }
 
-fn C.LoadImageAnim(&u8, &int) Image
+fn C.LoadImageAnim(&char, &int) Image
 
 // Load image sequence from file (frames appended to image.data)
 @[inline]
@@ -3203,20 +3197,20 @@ pub fn load_image_anim(file_name string, frames &int) Image {
 	return C.LoadImageAnim(file_name.str, frames)
 }
 
-fn C.LoadImageAnimFromMemory(&u8, &u8, int, &int) Image
+fn C.LoadImageAnimFromMemory(&char, &u8, int, &int) Image
 
 // Load image sequence from memory buffer
 @[inline]
-pub fn load_image_anim_from_memory(file_type string, file_data string, data_size int, frames &int) Image {
-	return C.LoadImageAnimFromMemory(file_type.str, file_data.str, data_size, frames)
+pub fn load_image_anim_from_memory(file_type string, file_data &u8, data_size int, frames &int) Image {
+	return C.LoadImageAnimFromMemory(file_type.str, file_data, data_size, frames)
 }
 
-fn C.LoadImageFromMemory(&u8, &u8, int) Image
+fn C.LoadImageFromMemory(&char, &u8, int) Image
 
 // Load image from memory buffer, fileType refers to extension: i.e. '.png'
 @[inline]
-pub fn load_image_from_memory(file_type string, file_data string, data_size int) Image {
-	return C.LoadImageFromMemory(file_type.str, file_data.str, data_size)
+pub fn load_image_from_memory(file_type string, file_data &u8, data_size int) Image {
+	return C.LoadImageFromMemory(file_type.str, file_data, data_size)
 }
 
 fn C.LoadImageFromTexture(Texture2D) Image
@@ -3251,7 +3245,7 @@ pub fn unload_image(image Image) {
 	C.UnloadImage(image)
 }
 
-fn C.ExportImage(Image, &u8) bool
+fn C.ExportImage(Image, &char) bool
 
 // Export image data to file, returns true on success
 @[inline]
@@ -3259,17 +3253,15 @@ pub fn export_image(image Image, file_name string) bool {
 	return C.ExportImage(image, file_name.str)
 }
 
-fn C.ExportImageToMemory(Image, &u8, &int) &u8
+fn C.ExportImageToMemory(Image, &char, &int) &u8
 
 // Export image to memory buffer
 @[inline]
-pub fn export_image_to_memory(image Image, file_type string, file_size &int) string {
-	unsafe {
-		return C.ExportImageToMemory(image, file_type.str, file_size).vstring()
-	}
+pub fn export_image_to_memory(image Image, file_type string, file_size &int) &u8 {
+	return C.ExportImageToMemory(image, file_type.str, file_size)
 }
 
-fn C.ExportImageAsCode(Image, &u8) bool
+fn C.ExportImageAsCode(Image, &char) bool
 
 // Export image as code file defining an array of bytes, returns true on success
 @[inline]
@@ -3341,7 +3333,7 @@ pub fn gen_image_cellular(width int, height int, tile_size int) Image {
 	return C.GenImageCellular(width, height, tile_size)
 }
 
-fn C.GenImageText(int, int, &u8) Image
+fn C.GenImageText(int, int, &char) Image
 
 // Generate image: grayscale image from text data
 @[inline]
@@ -3373,7 +3365,7 @@ pub fn image_from_channel(image Image, selected_channel int) Image {
 	return C.ImageFromChannel(image, selected_channel)
 }
 
-fn C.ImageText(&u8, int, Color) Image
+fn C.ImageText(&char, int, Color) Image
 
 // Create an image from text (default font)
 @[inline]
@@ -3381,7 +3373,7 @@ pub fn image_text(text string, font_size int, color Color) Image {
 	return C.ImageText(text.str, font_size, color)
 }
 
-fn C.ImageTextEx(Font, &u8, f32, f32, Color) Image
+fn C.ImageTextEx(Font, &char, f32, f32, Color) Image
 
 // Create an image from text (custom sprite font)
 @[inline]
@@ -3797,7 +3789,7 @@ pub fn image_draw(dst &Image, src Image, src_rec Rectangle, dst_rec Rectangle, t
 	C.ImageDraw(dst, src, src_rec, dst_rec, tint)
 }
 
-fn C.ImageDrawText(&Image, &u8, int, int, int, Color)
+fn C.ImageDrawText(&Image, &char, int, int, int, Color)
 
 // Draw text (using default font) within an image (destination)
 @[inline]
@@ -3805,7 +3797,7 @@ pub fn image_draw_text(dst &Image, text string, pos_x int, pos_y int, font_size 
 	C.ImageDrawText(dst, text.str, pos_x, pos_y, font_size, color)
 }
 
-fn C.ImageDrawTextEx(&Image, Font, &u8, Vector2, f32, f32, Color)
+fn C.ImageDrawTextEx(&Image, Font, &char, Vector2, f32, f32, Color)
 
 // Draw text (custom sprite font) within an image (destination)
 @[inline]
@@ -3813,7 +3805,7 @@ pub fn image_draw_text_ex(dst &Image, font Font, text string, position Vector2, 
 	C.ImageDrawTextEx(dst, font, text.str, position, font_size, spacing, tint)
 }
 
-fn C.LoadTexture(&u8) Texture2D
+fn C.LoadTexture(&char) Texture2D
 
 // Load texture from file into GPU memory (VRAM)
 @[inline]
@@ -4109,7 +4101,7 @@ pub fn get_font_default() Font {
 	return C.GetFontDefault()
 }
 
-fn C.LoadFont(&u8) Font
+fn C.LoadFont(&char) Font
 
 // Load font from file into GPU memory (VRAM)
 @[inline]
@@ -4117,7 +4109,7 @@ pub fn load_font(file_name string) Font {
 	return C.LoadFont(file_name.str)
 }
 
-fn C.LoadFontEx(&u8, int, &int, int) Font
+fn C.LoadFontEx(&char, int, &int, int) Font
 
 // Load font from file with extended parameters, use NULL for codepoints and 0 for codepointCount to load the default character set, font size is provided in pixels height
 @[inline]
@@ -4133,12 +4125,12 @@ pub fn load_font_from_image(image Image, key Color, first_char int) Font {
 	return C.LoadFontFromImage(image, key, first_char)
 }
 
-fn C.LoadFontFromMemory(&u8, &u8, int, int, &int, int) Font
+fn C.LoadFontFromMemory(&char, &u8, int, int, &int, int) Font
 
 // Load font from memory buffer, fileType refers to extension: i.e. '.ttf'
 @[inline]
-pub fn load_font_from_memory(file_type string, file_data string, data_size int, font_size int, codepoints &int, codepoint_count int) Font {
-	return C.LoadFontFromMemory(file_type.str, file_data.str, data_size, font_size, codepoints,
+pub fn load_font_from_memory(file_type string, file_data &u8, data_size int, font_size int, codepoints &int, codepoint_count int) Font {
+	return C.LoadFontFromMemory(file_type.str, file_data, data_size, font_size, codepoints,
 		codepoint_count)
 }
 
@@ -4154,8 +4146,8 @@ fn C.LoadFontData(&u8, int, int, &int, int, int) &GlyphInfo
 
 // Load font data for further use
 @[inline]
-pub fn load_font_data(file_data string, data_size int, font_size int, codepoints &int, codepoint_count int, typ int) &GlyphInfo {
-	return C.LoadFontData(file_data.str, data_size, font_size, codepoints, codepoint_count,
+pub fn load_font_data(file_data &u8, data_size int, font_size int, codepoints &int, codepoint_count int, typ int) &GlyphInfo {
+	return C.LoadFontData(file_data, data_size, font_size, codepoints, codepoint_count,
 		typ)
 }
 
@@ -4183,7 +4175,7 @@ pub fn unload_font(font Font) {
 	C.UnloadFont(font)
 }
 
-fn C.ExportFontAsCode(Font, &u8) bool
+fn C.ExportFontAsCode(Font, &char) bool
 
 // Export font as code file, returns true on success
 @[inline]
@@ -4199,7 +4191,7 @@ pub fn draw_fps(pos_x int, pos_y int) {
 	C.DrawFPS(pos_x, pos_y)
 }
 
-fn C.DrawText(&u8, int, int, int, Color)
+fn C.DrawText(&char, int, int, int, Color)
 
 // Draw text (using default font)
 @[inline]
@@ -4207,7 +4199,7 @@ pub fn draw_text(text string, pos_x int, pos_y int, font_size int, color Color) 
 	C.DrawText(text.str, pos_x, pos_y, font_size, color)
 }
 
-fn C.DrawTextEx(Font, &u8, Vector2, f32, f32, Color)
+fn C.DrawTextEx(Font, &char, Vector2, f32, f32, Color)
 
 // Draw text using font and additional parameters
 @[inline]
@@ -4215,7 +4207,7 @@ pub fn draw_text_ex(font Font, text string, position Vector2, font_size f32, spa
 	C.DrawTextEx(font, text.str, position, font_size, spacing, tint)
 }
 
-fn C.DrawTextPro(Font, &u8, Vector2, Vector2, f32, f32, f32, Color)
+fn C.DrawTextPro(Font, &char, Vector2, Vector2, f32, f32, f32, Color)
 
 // Draw text using Font and pro parameters (rotation)
 @[inline]
@@ -4248,7 +4240,7 @@ pub fn set_text_line_spacing(spacing int) {
 	C.SetTextLineSpacing(spacing)
 }
 
-fn C.MeasureText(&u8, int) int
+fn C.MeasureText(&char, int) int
 
 // Measure string width for default font
 @[inline]
@@ -4256,7 +4248,7 @@ pub fn measure_text(text string, font_size int) int {
 	return C.MeasureText(text.str, font_size)
 }
 
-fn C.MeasureTextEx(Font, &u8, f32, f32) Vector2
+fn C.MeasureTextEx(Font, &char, f32, f32) Vector2
 
 // Measure string size for Font
 @[inline]
@@ -4288,7 +4280,7 @@ pub fn get_glyph_atlas_rec(font Font, codepoint int) Rectangle {
 	return C.GetGlyphAtlasRec(font, codepoint)
 }
 
-fn C.LoadUTF8(&int, int) &u8
+fn C.LoadUTF8(&int, int) &char
 
 // Load UTF-8 text encoded from codepoints array
 @[inline]
@@ -4298,7 +4290,7 @@ pub fn load_utf8(codepoints &int, length int) string {
 	}
 }
 
-fn C.UnloadUTF8(&u8)
+fn C.UnloadUTF8(&char)
 
 // Unload UTF-8 text encoded from codepoints array
 @[inline]
@@ -4306,7 +4298,7 @@ pub fn unload_utf8(text string) {
 	C.UnloadUTF8(text.str)
 }
 
-fn C.LoadCodepoints(&u8, &int) &int
+fn C.LoadCodepoints(&char, &int) &int
 
 // Load all codepoints from a UTF-8 text string, codepoints count returned by parameter
 @[inline]
@@ -4322,7 +4314,7 @@ pub fn unload_codepoints(codepoints &int) {
 	C.UnloadCodepoints(codepoints)
 }
 
-fn C.GetCodepointCount(&u8) int
+fn C.GetCodepointCount(&char) int
 
 // Get total number of codepoints in a UTF-8 encoded string
 @[inline]
@@ -4330,7 +4322,7 @@ pub fn get_codepoint_count(text string) int {
 	return C.GetCodepointCount(text.str)
 }
 
-fn C.GetCodepoint(&u8, &int) int
+fn C.GetCodepoint(&char, &int) int
 
 // Get next codepoint in a UTF-8 encoded string, 0x3f('?') is returned on failure
 @[inline]
@@ -4338,7 +4330,7 @@ pub fn get_codepoint(text string, codepoint_size &int) int {
 	return C.GetCodepoint(text.str, codepoint_size)
 }
 
-fn C.GetCodepointNext(&u8, &int) int
+fn C.GetCodepointNext(&char, &int) int
 
 // Get next codepoint in a UTF-8 encoded string, 0x3f('?') is returned on failure
 @[inline]
@@ -4346,7 +4338,7 @@ pub fn get_codepoint_next(text string, codepoint_size &int) int {
 	return C.GetCodepointNext(text.str, codepoint_size)
 }
 
-fn C.GetCodepointPrevious(&u8, &int) int
+fn C.GetCodepointPrevious(&char, &int) int
 
 // Get previous codepoint in a UTF-8 encoded string, 0x3f('?') is returned on failure
 @[inline]
@@ -4354,7 +4346,7 @@ pub fn get_codepoint_previous(text string, codepoint_size &int) int {
 	return C.GetCodepointPrevious(text.str, codepoint_size)
 }
 
-fn C.CodepointToUTF8(int, &int) &u8
+fn C.CodepointToUTF8(int, &int) &char
 
 // Encode one codepoint into UTF-8 byte array (array length returned as parameter)
 @[inline]
@@ -4364,7 +4356,7 @@ pub fn codepoint_to_utf8(codepoint int, utf8_size &int) string {
 	}
 }
 
-fn C.TextCopy(&u8, &u8) int
+fn C.TextCopy(&char, &char) int
 
 // Copy one string to another, returns bytes copied
 @[inline]
@@ -4372,7 +4364,7 @@ pub fn text_copy(dst string, src string) int {
 	return C.TextCopy(dst.str, src.str)
 }
 
-fn C.TextIsEqual(&u8, &u8) bool
+fn C.TextIsEqual(&char, &char) bool
 
 // Check if two text string are equal
 @[inline]
@@ -4380,7 +4372,7 @@ pub fn text_is_equal(text1 string, text2 string) bool {
 	return C.TextIsEqual(text1.str, text2.str)
 }
 
-fn C.TextLength(&u8) u32
+fn C.TextLength(&char) u32
 
 // Get text length, checks for '\0' ending
 @[inline]
@@ -4388,7 +4380,7 @@ pub fn text_length(text string) u32 {
 	return C.TextLength(text.str)
 }
 
-fn C.TextFormat(&u8, ...any) &u8
+fn C.TextFormat(&char, ...any) &char
 
 // Text formatting with variables (sprintf() style)
 @[inline]
@@ -4398,7 +4390,7 @@ pub fn text_format(text string, args ...any) string {
 	}
 }
 
-fn C.TextSubtext(&u8, int, int) &u8
+fn C.TextSubtext(&char, int, int) &char
 
 // Get a piece of a text string
 @[inline]
@@ -4408,7 +4400,7 @@ pub fn text_subtext(text string, position int, length int) string {
 	}
 }
 
-fn C.TextReplace(&u8, &u8, &u8) &u8
+fn C.TextReplace(&char, &char, &char) &char
 
 // Replace text string (WARNING: memory must be freed!)
 @[inline]
@@ -4418,7 +4410,7 @@ pub fn text_replace(text string, replace string, by string) string {
 	}
 }
 
-fn C.TextInsert(&u8, &u8, int) &u8
+fn C.TextInsert(&char, &char, int) &char
 
 // Insert text in a position (WARNING: memory must be freed!)
 @[inline]
@@ -4428,25 +4420,25 @@ pub fn text_insert(text string, insert string, position int) string {
 	}
 }
 
-fn C.TextJoin(&&u8, int, &u8) &u8
+fn C.TextJoin(&&char, int, &char) &char
 
 // Join text strings with delimiter
 @[inline]
-pub fn text_join(text_list &&u8, count int, delimiter string) string {
+pub fn text_join(text_list &&char, count int, delimiter string) string {
 	unsafe {
 		return C.TextJoin(text_list, count, delimiter.str).vstring()
 	}
 }
 
-fn C.TextSplit(&u8, u8, &int) &&u8
+fn C.TextSplit(&char, char, &int) &&char
 
 // Split text into multiple strings
 @[inline]
-pub fn text_split(text string, delimiter u8, count &int) &&u8 {
+pub fn text_split(text string, delimiter char, count &int) &&char {
 	return C.TextSplit(text.str, delimiter, count)
 }
 
-fn C.TextAppend(&u8, &u8, &int)
+fn C.TextAppend(&char, &char, &int)
 
 // Append text at specific position and move cursor!
 @[inline]
@@ -4454,7 +4446,7 @@ pub fn text_append(text string, append string, position &int) {
 	C.TextAppend(text.str, append.str, position)
 }
 
-fn C.TextFindIndex(&u8, &u8) int
+fn C.TextFindIndex(&char, &char) int
 
 // Find first text occurrence within a string
 @[inline]
@@ -4462,7 +4454,7 @@ pub fn text_find_index(text string, find string) int {
 	return C.TextFindIndex(text.str, find.str)
 }
 
-fn C.TextToUpper(&u8) &u8
+fn C.TextToUpper(&char) &char
 
 // Get upper case version of provided string
 @[inline]
@@ -4472,7 +4464,7 @@ pub fn text_to_upper(text string) string {
 	}
 }
 
-fn C.TextToLower(&u8) &u8
+fn C.TextToLower(&char) &char
 
 // Get lower case version of provided string
 @[inline]
@@ -4482,7 +4474,7 @@ pub fn text_to_lower(text string) string {
 	}
 }
 
-fn C.TextToPascal(&u8) &u8
+fn C.TextToPascal(&char) &char
 
 // Get Pascal case notation version of provided string
 @[inline]
@@ -4492,7 +4484,7 @@ pub fn text_to_pascal(text string) string {
 	}
 }
 
-fn C.TextToSnake(&u8) &u8
+fn C.TextToSnake(&char) &char
 
 // Get Snake case notation version of provided string
 @[inline]
@@ -4502,7 +4494,7 @@ pub fn text_to_snake(text string) string {
 	}
 }
 
-fn C.TextToCamel(&u8) &u8
+fn C.TextToCamel(&char) &char
 
 // Get Camel case notation version of provided string
 @[inline]
@@ -4512,7 +4504,7 @@ pub fn text_to_camel(text string) string {
 	}
 }
 
-fn C.TextToInteger(&u8) int
+fn C.TextToInteger(&char) int
 
 // Get integer value from text (negative values not supported)
 @[inline]
@@ -4520,7 +4512,7 @@ pub fn text_to_integer(text string) int {
 	return C.TextToInteger(text.str)
 }
 
-fn C.TextToFloat(&u8) f32
+fn C.TextToFloat(&char) f32
 
 // Get float value from text (negative values not supported)
 @[inline]
@@ -4696,7 +4688,7 @@ pub fn draw_grid(slices int, spacing f32) {
 	C.DrawGrid(slices, spacing)
 }
 
-fn C.LoadModel(&u8) Model
+fn C.LoadModel(&char) Model
 
 // Load model from files (meshes and materials)
 @[inline]
@@ -4873,7 +4865,7 @@ pub fn gen_mesh_tangents(mesh &Mesh) {
 	C.GenMeshTangents(mesh)
 }
 
-fn C.ExportMesh(Mesh, &u8) bool
+fn C.ExportMesh(Mesh, &char) bool
 
 // Export mesh data to file, returns true on success
 @[inline]
@@ -4881,7 +4873,7 @@ pub fn export_mesh(mesh Mesh, file_name string) bool {
 	return C.ExportMesh(mesh, file_name.str)
 }
 
-fn C.ExportMeshAsCode(Mesh, &u8) bool
+fn C.ExportMeshAsCode(Mesh, &char) bool
 
 // Export mesh as code file (.h) defining multiple arrays of vertex attributes
 @[inline]
@@ -4977,7 +4969,7 @@ pub fn gen_mesh_cubicmap(cubicmap Image, cube_size Vector3) Mesh {
 	return C.GenMeshCubicmap(cubicmap, cube_size)
 }
 
-fn C.LoadMaterials(&u8, &int) &Material
+fn C.LoadMaterials(&char, &int) &Material
 
 // Load materials from model file
 @[inline]
@@ -5025,7 +5017,7 @@ pub fn set_model_mesh_material(model &Model, mesh_id int, material_id int) {
 	C.SetModelMeshMaterial(model, mesh_id, material_id)
 }
 
-fn C.LoadModelAnimations(&u8, &int) &ModelAnimation
+fn C.LoadModelAnimations(&char, &int) &ModelAnimation
 
 // Load model animations from file
 @[inline]
@@ -5177,7 +5169,7 @@ pub fn get_master_volume() f32 {
 	return C.GetMasterVolume()
 }
 
-fn C.LoadWave(&u8) Wave
+fn C.LoadWave(&char) Wave
 
 // Load wave data from file
 @[inline]
@@ -5185,12 +5177,12 @@ pub fn load_wave(file_name string) Wave {
 	return C.LoadWave(file_name.str)
 }
 
-fn C.LoadWaveFromMemory(&u8, &u8, int) Wave
+fn C.LoadWaveFromMemory(&char, &u8, int) Wave
 
 // Load wave from memory buffer, fileType refers to extension: i.e. '.wav'
 @[inline]
-pub fn load_wave_from_memory(file_type string, file_data string, data_size int) Wave {
-	return C.LoadWaveFromMemory(file_type.str, file_data.str, data_size)
+pub fn load_wave_from_memory(file_type string, file_data &u8, data_size int) Wave {
+	return C.LoadWaveFromMemory(file_type.str, file_data, data_size)
 }
 
 fn C.IsWaveValid(Wave) bool
@@ -5201,7 +5193,7 @@ pub fn is_wave_valid(wave Wave) bool {
 	return C.IsWaveValid(wave)
 }
 
-fn C.LoadSound(&u8) Sound
+fn C.LoadSound(&char) Sound
 
 // Load sound from file
 @[inline]
@@ -5265,7 +5257,7 @@ pub fn unload_sound_alias(alias Sound) {
 	C.UnloadSoundAlias(alias)
 }
 
-fn C.ExportWave(Wave, &u8) bool
+fn C.ExportWave(Wave, &char) bool
 
 // Export wave data to file, returns true on success
 @[inline]
@@ -5273,7 +5265,7 @@ pub fn export_wave(wave Wave, file_name string) bool {
 	return C.ExportWave(wave, file_name.str)
 }
 
-fn C.ExportWaveAsCode(Wave, &u8) bool
+fn C.ExportWaveAsCode(Wave, &char) bool
 
 // Export wave sample data to code (.h), returns true on success
 @[inline]
@@ -5385,7 +5377,7 @@ pub fn unload_wave_samples(samples &f32) {
 	C.UnloadWaveSamples(samples)
 }
 
-fn C.LoadMusicStream(&u8) Music
+fn C.LoadMusicStream(&char) Music
 
 // Load music stream from file
 @[inline]
@@ -5393,12 +5385,12 @@ pub fn load_music_stream(file_name string) Music {
 	return C.LoadMusicStream(file_name.str)
 }
 
-fn C.LoadMusicStreamFromMemory(&u8, &u8, int) Music
+fn C.LoadMusicStreamFromMemory(&char, &u8, int) Music
 
 // Load music stream from data
 @[inline]
-pub fn load_music_stream_from_memory(file_type string, data string, data_size int) Music {
-	return C.LoadMusicStreamFromMemory(file_type.str, data.str, data_size)
+pub fn load_music_stream_from_memory(file_type string, data &u8, data_size int) Music {
+	return C.LoadMusicStreamFromMemory(file_type.str, data, data_size)
 }
 
 fn C.IsMusicValid(Music) bool
