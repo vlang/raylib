@@ -34,7 +34,7 @@ varaidic_type_translations = {
 
 c_to_v_types = {
 	"void": "",
-	"char": "u8",
+	# "char": "u8",
 	"float": "f32",
 	"double": "f64",
 	"unsigned int": "u32",
@@ -91,6 +91,29 @@ renamed_structs = {
 renamed_identifiers = {
 	"type": "typ",
 	"Type": "typ",
+}
+
+enum_types = {
+	"raylib": {
+		"ConfigFlags": "u32",
+		"Gesture": "u32",
+	}
+}
+
+flag_enums = {
+	"raylib": [ "ConfigFlags", "Gesture" ]
+}
+
+# Raylib uses integer types for its enum arguments, so we will convert those to
+# enum types for ease-of-use in V.
+functions_with_enum_args = {
+	"raylib": {
+		"SetConfigFlags": { "flags": "ConfigFlags" },
+		"IsWindowState": { "flag": "ConfigFlags" },
+		"SetWindowState": { "flags": "ConfigFlags" },
+		"ClearWindowState": { "flags": "ConfigFlags" },
+		"SetGesturesEnabled": { "flags": "Gesture" },
+	}
 }
 
 # Some modules depend on other modules, as expected. However Raylib's likes to
@@ -219,13 +242,22 @@ def generate(path: str, json_path: str, lib: str):
 
 		# Translate enums
 		for enum in data.get("enums", []):
+			is_flag_enum = raylib_module in flag_enums and enum["name"] in flag_enums[raylib_module]
+
 			if enum["description"] != "":
 				fp.write(f"// {enum["description"]}\n")
-			fp.write(f"pub enum {enum["name"]} {{\n")
+			if is_flag_enum:
+				fp.write("@[flag]\n")
+			fp.write(f"pub enum {enum["name"]}")
+			if raylib_module in enum_types and enum["name"] in enum_types[raylib_module]:
+				fp.write(f" as {enum_types[raylib_module][enum["name"]]}")
+			fp.write(" {\n")
 			for value in enum["values"]:
-				fp.write(f"\t{value["name"].lower()} = {value["value"]}")
+				fp.write(f"\t{value["name"].lower()}")
+				if not is_flag_enum:
+					fp.write(f" = {value["value"]}")
 				if value["description"] != "":
-					fp.write(f"// {value["description"]}\n")
+					fp.write(f" // {value["description"]}\n")
 			fp.write("}\n")
 
 		# Bind functions
@@ -239,7 +271,20 @@ def generate(path: str, json_path: str, lib: str):
 			params = function.get("params", [])
 			has_params = len(params) > 0
 			for param in params:
-				param["type"] = c_type_to_v_type(param["type"], v_name)
+				# If this arg represents an enum flag, then we
+				# should use that instead of an int type. We
+				# handle them here because we need more info
+				# than is provided to the c_type_to_v_type
+				# function.
+				if (
+					raylib_module in functions_with_enum_args and
+					c_name in functions_with_enum_args[raylib_module] and
+					param["name"] in functions_with_enum_args[raylib_module][c_name]
+				):
+					param["type"] = functions_with_enum_args[raylib_module][c_name][param["name"]]
+				else:
+					param["type"] = c_type_to_v_type(param["type"], v_name)
+
 				param["name"] = translate_identifier(param["name"])
 
 			c_args = [p["type"] for p in params]
@@ -257,15 +302,15 @@ def generate(path: str, json_path: str, lib: str):
 
 			# Convert C-string arguments to V-strings to make the DX better :D
 			for index, arg in enumerate(params):
-				if arg["type"] == "&u8":
+				if arg["type"] == "&char":
 					call_args[index] = f"{arg["name"]}.str"
-					decl_args[index] = decl_args[index].replace("&u8", "string")
+					decl_args[index] = decl_args[index].replace("&char", "string")
 
 			c_args = ", ".join(c_args)
 			decl_args = ", ".join(decl_args)
 			call_args = ", ".join(call_args)
 
-			if c_return_type == "&u8":
+			if c_return_type == "&char":
 				v_return_type = "string"
 
 			# Now we write the binding to the file

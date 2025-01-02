@@ -534,7 +534,7 @@ pub fn gui_get_style(control int, property int) int {
 	return C.GuiGetStyle(control, property)
 }
 
-fn C.GuiLoadStyle(&u8)
+fn C.GuiLoadStyle(&char)
 
 // Load style file over global style variable (.rgs)
 @[inline]
@@ -566,7 +566,7 @@ pub fn gui_disable_tooltip() {
 	C.GuiDisableTooltip()
 }
 
-fn C.GuiSetTooltip(&u8)
+fn C.GuiSetTooltip(&char)
 
 // Set tooltip string
 @[inline]
@@ -574,7 +574,7 @@ pub fn gui_set_tooltip(tooltip string) {
 	C.GuiSetTooltip(tooltip.str)
 }
 
-fn C.GuiIconText(int, &u8) &u8
+fn C.GuiIconText(int, &char) &char
 
 // Get text with icon id prepended (if supported)
 @[inline]
@@ -600,11 +600,11 @@ pub fn gui_get_icons() &u32 {
 	return C.GuiGetIcons()
 }
 
-fn C.GuiLoadIcons(&u8, bool) &&u8
+fn C.GuiLoadIcons(&char, bool) &&char
 
 // Load raygui icons file (.rgi) into internal icons data
 @[inline]
-pub fn gui_load_icons(file_name string, load_icons_name bool) &&u8 {
+pub fn gui_load_icons(file_name string, load_icons_name bool) &&char {
 	return C.GuiLoadIcons(file_name.str, load_icons_name)
 }
 
@@ -616,7 +616,7 @@ pub fn gui_draw_icon(icon_id int, pos_x int, pos_y int, pixel_size int, color Co
 	C.GuiDrawIcon(icon_id, pos_x, pos_y, pixel_size, color)
 }
 
-fn C.GuiWindowBox(Rectangle, &u8) int
+fn C.GuiWindowBox(Rectangle, &char) int
 
 // Window Box control, shows a window that can be closed
 @[inline]
@@ -624,7 +624,7 @@ pub fn gui_window_box(bounds Rectangle, title string) int {
 	return C.GuiWindowBox(bounds, title.str)
 }
 
-fn C.GuiGroupBox(Rectangle, &u8) int
+fn C.GuiGroupBox(Rectangle, &char) int
 
 // Group Box control with text name
 @[inline]
@@ -632,7 +632,7 @@ pub fn gui_group_box(bounds Rectangle, text string) int {
 	return C.GuiGroupBox(bounds, text.str)
 }
 
-fn C.GuiLine(Rectangle, &u8) int
+fn C.GuiLine(Rectangle, &char) int
 
 // Line separator control, could contain text
 @[inline]
@@ -640,7 +640,7 @@ pub fn gui_line(bounds Rectangle, text string) int {
 	return C.GuiLine(bounds, text.str)
 }
 
-fn C.GuiPanel(Rectangle, &u8) int
+fn C.GuiPanel(Rectangle, &char) int
 
 // Panel control, useful to group controls
 @[inline]
@@ -648,15 +648,15 @@ pub fn gui_panel(bounds Rectangle, text string) int {
 	return C.GuiPanel(bounds, text.str)
 }
 
-fn C.GuiTabBar(Rectangle, &&u8, int, &int) int
+fn C.GuiTabBar(Rectangle, &&char, int, &int) int
 
 // Tab Bar control, returns TAB to be closed or -1
 @[inline]
-pub fn gui_tab_bar(bounds Rectangle, text &&u8, count int, active &int) int {
+pub fn gui_tab_bar(bounds Rectangle, text &&char, count int, active &int) int {
 	return C.GuiTabBar(bounds, text, count, active)
 }
 
-fn C.GuiScrollPanel(Rectangle, &u8, Rectangle, &Vector2, &Rectangle) int
+fn C.GuiScrollPanel(Rectangle, &char, Rectangle, &Vector2, &Rectangle) int
 
 // Scroll Panel control
 @[inline]
@@ -664,7 +664,7 @@ pub fn gui_scroll_panel(bounds Rectangle, text string, content Rectangle, scroll
 	return C.GuiScrollPanel(bounds, text.str, content, scroll, view)
 }
 
-fn C.GuiLabel(Rectangle, &u8) int
+fn C.GuiLabel(Rectangle, &char) int
 
 // Label control
 @[inline]
@@ -672,7 +672,7 @@ pub fn gui_label(bounds Rectangle, text string) int {
 	return C.GuiLabel(bounds, text.str)
 }
 
-fn C.GuiButton(Rectangle, &u8) int
+fn C.GuiButton(Rectangle, &char) int
 
 // Button control, returns true when clicked
 @[inline]
@@ -680,7 +680,7 @@ pub fn gui_button(bounds Rectangle, text string) int {
 	return C.GuiButton(bounds, text.str)
 }
 
-fn C.GuiLabelButton(Rectangle, &u8) int
+fn C.GuiLabelButton(Rectangle, &char) int
 
 // Label button control, returns true when clicked
 @[inline]
@@ -688,7 +688,7 @@ pub fn gui_label_button(bounds Rectangle, text string) int {
 	return C.GuiLabelButton(bounds, text.str)
 }
 
-fn C.GuiToggle(Rectangle, &u8, &bool) int
+fn C.GuiToggle(Rectangle, &char, &bool) int
 
 // Toggle Button control
 @[inline]
@@ -696,7 +696,7 @@ pub fn gui_toggle(bounds Rectangle, text string, active &bool) int {
 	return C.GuiToggle(bounds, text.str, active)
 }
 
-fn C.GuiToggleGroup(Rectangle, &u8, &int) int
+fn C.GuiToggleGroup(Rectangle, &char, &int) int
 
 // Toggle Group control
 @[inline]
@@ -704,7 +704,7 @@ pub fn gui_toggle_group(bounds Rectangle, text string, active &int) int {
 	return C.GuiToggleGroup(bounds, text.str, active)
 }
 
-fn C.GuiToggleSlider(Rectangle, &u8, &int) int
+fn C.GuiToggleSlider(Rectangle, &char, &int) int
 
 // Toggle Slider control
 @[inline]
@@ -712,7 +712,7 @@ pub fn gui_toggle_slider(bounds Rectangle, text string, active &int) int {
 	return C.GuiToggleSlider(bounds, text.str, active)
 }
 
-fn C.GuiCheckBox(Rectangle, &u8, &bool) int
+fn C.GuiCheckBox(Rectangle, &char, &bool) int
 
 // Check Box control, returns true when active
 @[inline]
@@ -720,7 +720,7 @@ pub fn gui_check_box(bounds Rectangle, text string, checked &bool) int {
 	return C.GuiCheckBox(bounds, text.str, checked)
 }
 
-fn C.GuiComboBox(Rectangle, &u8, &int) int
+fn C.GuiComboBox(Rectangle, &char, &int) int
 
 // Combo Box control
 @[inline]
@@ -728,7 +728,7 @@ pub fn gui_combo_box(bounds Rectangle, text string, active &int) int {
 	return C.GuiComboBox(bounds, text.str, active)
 }
 
-fn C.GuiDropdownBox(Rectangle, &u8, &int, bool) int
+fn C.GuiDropdownBox(Rectangle, &char, &int, bool) int
 
 // Dropdown Box control
 @[inline]
@@ -736,7 +736,7 @@ pub fn gui_dropdown_box(bounds Rectangle, text string, active &int, edit_mode bo
 	return C.GuiDropdownBox(bounds, text.str, active, edit_mode)
 }
 
-fn C.GuiSpinner(Rectangle, &u8, &int, int, int, bool) int
+fn C.GuiSpinner(Rectangle, &char, &int, int, int, bool) int
 
 // Spinner control
 @[inline]
@@ -744,7 +744,7 @@ pub fn gui_spinner(bounds Rectangle, text string, value &int, min_value int, max
 	return C.GuiSpinner(bounds, text.str, value, min_value, max_value, edit_mode)
 }
 
-fn C.GuiValueBox(Rectangle, &u8, &int, int, int, bool) int
+fn C.GuiValueBox(Rectangle, &char, &int, int, int, bool) int
 
 // Value Box control, updates input text with numbers
 @[inline]
@@ -752,7 +752,7 @@ pub fn gui_value_box(bounds Rectangle, text string, value &int, min_value int, m
 	return C.GuiValueBox(bounds, text.str, value, min_value, max_value, edit_mode)
 }
 
-fn C.GuiValueBoxFloat(Rectangle, &u8, &u8, &f32, bool) int
+fn C.GuiValueBoxFloat(Rectangle, &char, &char, &f32, bool) int
 
 // Value box control for float values
 @[inline]
@@ -760,7 +760,7 @@ pub fn gui_value_box_float(bounds Rectangle, text string, text_value string, val
 	return C.GuiValueBoxFloat(bounds, text.str, text_value.str, value, edit_mode)
 }
 
-fn C.GuiTextBox(Rectangle, &u8, int, bool) int
+fn C.GuiTextBox(Rectangle, &char, int, bool) int
 
 // Text Box control, updates input text
 @[inline]
@@ -768,7 +768,7 @@ pub fn gui_text_box(bounds Rectangle, text string, text_size int, edit_mode bool
 	return C.GuiTextBox(bounds, text.str, text_size, edit_mode)
 }
 
-fn C.GuiSlider(Rectangle, &u8, &u8, &f32, f32, f32) int
+fn C.GuiSlider(Rectangle, &char, &char, &f32, f32, f32) int
 
 // Slider control
 @[inline]
@@ -776,7 +776,7 @@ pub fn gui_slider(bounds Rectangle, text_left string, text_right string, value &
 	return C.GuiSlider(bounds, text_left.str, text_right.str, value, min_value, max_value)
 }
 
-fn C.GuiSliderBar(Rectangle, &u8, &u8, &f32, f32, f32) int
+fn C.GuiSliderBar(Rectangle, &char, &char, &f32, f32, f32) int
 
 // Slider Bar control
 @[inline]
@@ -784,7 +784,7 @@ pub fn gui_slider_bar(bounds Rectangle, text_left string, text_right string, val
 	return C.GuiSliderBar(bounds, text_left.str, text_right.str, value, min_value, max_value)
 }
 
-fn C.GuiProgressBar(Rectangle, &u8, &u8, &f32, f32, f32) int
+fn C.GuiProgressBar(Rectangle, &char, &char, &f32, f32, f32) int
 
 // Progress Bar control
 @[inline]
@@ -792,7 +792,7 @@ pub fn gui_progress_bar(bounds Rectangle, text_left string, text_right string, v
 	return C.GuiProgressBar(bounds, text_left.str, text_right.str, value, min_value, max_value)
 }
 
-fn C.GuiStatusBar(Rectangle, &u8) int
+fn C.GuiStatusBar(Rectangle, &char) int
 
 // Status Bar control, shows info text
 @[inline]
@@ -800,7 +800,7 @@ pub fn gui_status_bar(bounds Rectangle, text string) int {
 	return C.GuiStatusBar(bounds, text.str)
 }
 
-fn C.GuiDummyRec(Rectangle, &u8) int
+fn C.GuiDummyRec(Rectangle, &char) int
 
 // Dummy control for placeholders
 @[inline]
@@ -808,7 +808,7 @@ pub fn gui_dummy_rec(bounds Rectangle, text string) int {
 	return C.GuiDummyRec(bounds, text.str)
 }
 
-fn C.GuiGrid(Rectangle, &u8, f32, int, &Vector2) int
+fn C.GuiGrid(Rectangle, &char, f32, int, &Vector2) int
 
 // Grid control
 @[inline]
@@ -816,7 +816,7 @@ pub fn gui_grid(bounds Rectangle, text string, spacing f32, subdivs int, mouse_c
 	return C.GuiGrid(bounds, text.str, spacing, subdivs, mouse_cell)
 }
 
-fn C.GuiListView(Rectangle, &u8, &int, &int) int
+fn C.GuiListView(Rectangle, &char, &int, &int) int
 
 // List View control
 @[inline]
@@ -824,15 +824,15 @@ pub fn gui_list_view(bounds Rectangle, text string, scroll_index &int, active &i
 	return C.GuiListView(bounds, text.str, scroll_index, active)
 }
 
-fn C.GuiListViewEx(Rectangle, &&u8, int, &int, &int, &int) int
+fn C.GuiListViewEx(Rectangle, &&char, int, &int, &int, &int) int
 
 // List View with extended parameters
 @[inline]
-pub fn gui_list_view_ex(bounds Rectangle, text &&u8, count int, scroll_index &int, active &int, focus &int) int {
+pub fn gui_list_view_ex(bounds Rectangle, text &&char, count int, scroll_index &int, active &int, focus &int) int {
 	return C.GuiListViewEx(bounds, text, count, scroll_index, active, focus)
 }
 
-fn C.GuiMessageBox(Rectangle, &u8, &u8, &u8) int
+fn C.GuiMessageBox(Rectangle, &char, &char, &char) int
 
 // Message Box control, displays a message
 @[inline]
@@ -840,7 +840,7 @@ pub fn gui_message_box(bounds Rectangle, title string, message string, buttons s
 	return C.GuiMessageBox(bounds, title.str, message.str, buttons.str)
 }
 
-fn C.GuiTextInputBox(Rectangle, &u8, &u8, &u8, &u8, int, &bool) int
+fn C.GuiTextInputBox(Rectangle, &char, &char, &char, &char, int, &bool) int
 
 // Text Input Box control, ask for text, supports secret
 @[inline]
@@ -849,7 +849,7 @@ pub fn gui_text_input_box(bounds Rectangle, title string, message string, button
 		secret_view_active)
 }
 
-fn C.GuiColorPicker(Rectangle, &u8, &Color) int
+fn C.GuiColorPicker(Rectangle, &char, &Color) int
 
 // Color Picker control (multiple color controls)
 @[inline]
@@ -857,7 +857,7 @@ pub fn gui_color_picker(bounds Rectangle, text string, color &Color) int {
 	return C.GuiColorPicker(bounds, text.str, color)
 }
 
-fn C.GuiColorPanel(Rectangle, &u8, &Color) int
+fn C.GuiColorPanel(Rectangle, &char, &Color) int
 
 // Color Panel control
 @[inline]
@@ -865,7 +865,7 @@ pub fn gui_color_panel(bounds Rectangle, text string, color &Color) int {
 	return C.GuiColorPanel(bounds, text.str, color)
 }
 
-fn C.GuiColorBarAlpha(Rectangle, &u8, &f32) int
+fn C.GuiColorBarAlpha(Rectangle, &char, &f32) int
 
 // Color Bar Alpha control
 @[inline]
@@ -873,7 +873,7 @@ pub fn gui_color_bar_alpha(bounds Rectangle, text string, alpha &f32) int {
 	return C.GuiColorBarAlpha(bounds, text.str, alpha)
 }
 
-fn C.GuiColorBarHue(Rectangle, &u8, &f32) int
+fn C.GuiColorBarHue(Rectangle, &char, &f32) int
 
 // Color Bar Hue control
 @[inline]
@@ -881,7 +881,7 @@ pub fn gui_color_bar_hue(bounds Rectangle, text string, value &f32) int {
 	return C.GuiColorBarHue(bounds, text.str, value)
 }
 
-fn C.GuiColorPickerHSV(Rectangle, &u8, &Vector3) int
+fn C.GuiColorPickerHSV(Rectangle, &char, &Vector3) int
 
 // Color Picker control that avoids conversion to RGB on each call (multiple color controls)
 @[inline]
@@ -889,7 +889,7 @@ pub fn gui_color_picker_hsv(bounds Rectangle, text string, color_hsv &Vector3) i
 	return C.GuiColorPickerHSV(bounds, text.str, color_hsv)
 }
 
-fn C.GuiColorPanelHSV(Rectangle, &u8, &Vector3) int
+fn C.GuiColorPanelHSV(Rectangle, &char, &Vector3) int
 
 // Color Panel control that updates Hue-Saturation-Value color value, used by GuiColorPickerHSV()
 @[inline]
