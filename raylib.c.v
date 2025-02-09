@@ -210,7 +210,7 @@ pub struct C.Camera3D {
 	up Vector3
 	// Camera field-of-view aperture in Y (degrees) in perspective, used as near plane width in orthographic
 	fovy f32
-	// Camera projection: CAMERA_PERSPECTIVE or CAMERA_ORTHOGRAPHIC
+	// Camera projection: CAMERA_PERSPECTIVE (0) or CAMERA_ORTHOGRAPHIC (1)
 	projection int
 }
 
