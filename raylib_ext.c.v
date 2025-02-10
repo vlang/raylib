@@ -49,3 +49,8 @@ pub const raywhite = Color{245, 245, 245, 255}
 
 pub const camera_perspective = 0
 pub const camera_orthographic = 1
+
+pub const camera_free = 1
+pub const camera_orbital = 2
+pub const camera_first_person = 3
+pub const camera_third_person = 4
