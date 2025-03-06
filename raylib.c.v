@@ -961,7 +961,7 @@ fn C.InitWindow(int, int, &char)
 // Initialize window and OpenGL context
 @[inline]
 pub fn init_window(width int, height int, title string) {
-	C.InitWindow(width, height, title.str)
+	C.InitWindow(width, height, &char(title.str))
 }
 
 fn C.CloseWindow()
