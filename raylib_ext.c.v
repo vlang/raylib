@@ -7,6 +7,9 @@ module raylib
 
 #flag linux -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
 #flag darwin -lraylib -lm -framework Foundation -framework AppKit -framework OpenGL -framework CoreVideo
+#flag windows -DNOUSER -DNOSHOWWINDOW -DNOGDI
+#flag windows -lraylib@START_LIBS
+#flag windows -lgdi32 -lwinmm
 #include <raylib.h>
 
 @[typedef]
