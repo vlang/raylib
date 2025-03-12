@@ -47,3 +47,15 @@ pub const black = Color{ 0, 0, 0, 255 }
 pub const blank = Color{ 0, 0, 0, 0 }
 pub const magenta = Color{ 255, 0, 255, 255 }
 pub const raywhite = Color{ 245, 245, 245, 255 }
+
+// vis_key_pressed allows you to pass a `KeyboardKey` enum value in your V programs, instead of a plain int.
+@[inline]
+pub fn vis_key_pressed(key KeyboardKey) bool {
+	return is_key_pressed(int(key))
+}
+
+// vset_trace_log_level allows you to pass a `TraceLogLevel` enum value in your V programs, instead of a plain int.
+@[inline]
+pub fn vset_trace_log_level(log_level TraceLogLevel) {
+	set_trace_log_level(log_level)
+}
