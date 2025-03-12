@@ -15,11 +15,11 @@ fn test_raygui() {
 		raylib.begin_drawing()
 		raylib.clear_background(raylib.raywhite)
 
-		if raygui.gui_button(raylib.Rectangle{ 24, 24, 120, 30 }, "#191#Show Message") > 0 {
+		if raygui.gui_button(raylib.Rectangle{24, 24, 120, 30}, '#191#Show Message') > 0 {
 			show_message_box = true
-		} else if raygui.gui_button(raylib.Rectangle{ 24, 62, 120, 30 }, "++") > 0 {
+		} else if raygui.gui_button(raylib.Rectangle{24, 62, 120, 30}, '++') > 0 {
 			value = int(raymath.clamp(value + 1, 0, 10))
-		} else if raygui.gui_button(raylib.Rectangle{ 24, 92, 120, 30 }, "--") > 0 {
+		} else if raygui.gui_button(raylib.Rectangle{24, 92, 120, 30}, '--') > 0 {
 			value = int(raymath.clamp(value - 1, 0, 10))
 		}
 
@@ -27,7 +27,8 @@ fn test_raygui() {
 		raylib.draw_text(value.str(), 24, 130, 20, raylib.blue)
 
 		if show_message_box {
-			result := raygui.gui_message_box(raylib.Rectangle{ 85, 70, 250, 100 }, "#191#Message Box", "Hi! This is a message!", "Nice;Cool")
+			result := raygui.gui_message_box(raylib.Rectangle{85, 70, 250, 100}, '#191#Message Box',
+				'Hi! This is a message!', 'Nice;Cool')
 
 			if result >= 0 {
 				show_message_box = false

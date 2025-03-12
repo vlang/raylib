@@ -58,15 +58,15 @@ pub enum GuiTextWrapMode {
 // Gui controls
 pub enum GuiControl {
 	default     = 0
-	label       = 1  // Used also for: LABELBUTTON
+	label       = 1 // Used also for: LABELBUTTON
 	button      = 2
-	toggle      = 3  // Used also for: TOGGLEGROUP
-	slider      = 4  // Used also for: SLIDERBAR, TOGGLESLIDER
+	toggle      = 3 // Used also for: TOGGLEGROUP
+	slider      = 4 // Used also for: SLIDERBAR, TOGGLESLIDER
 	progressbar = 5
 	checkbox    = 6
 	combobox    = 7
 	dropdownbox = 8
-	textbox     = 9  // Used also for: TEXTBOXMULTI
+	textbox     = 9 // Used also for: TEXTBOXMULTI
 	valuebox    = 10
 	spinner     = 11 // Uses: BUTTON, VALUEBOX
 	listview    = 12
