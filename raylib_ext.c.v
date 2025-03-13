@@ -58,14 +58,118 @@ pub const camera_orbital = 2
 pub const camera_first_person = 3
 pub const camera_third_person = 4
 
+// Keyboard related
+
 // vis_key_pressed allows you to pass a `KeyboardKey` enum value in your V programs, instead of a plain int.
 @[inline]
 pub fn vis_key_pressed(key KeyboardKey) bool {
 	return is_key_pressed(int(key))
 }
 
+// vis_key_pressed_repeat allows you to pass a `KeyboardKey` enum value in your V programs, instead of a plain int.
+@[inline]
+pub fn vis_key_pressed_repeat(key KeyboardKey) bool {
+	return is_key_pressed_repeat(int(key))
+}
+
+// vis_key_down allows you to pass a `KeyboardKey` enum value in your V programs, instead of a plain int.
+@[inline]
+pub fn vis_key_down(key KeyboardKey) bool {
+	return is_key_down(int(key))
+}
+
+// vis_key_up allows you to pass a `KeyboardKey` enum value in your V programs, instead of a plain int.
+@[inline]
+pub fn vis_key_up(key KeyboardKey) bool {
+	return is_key_up(int(key))
+}
+
+// vis_key_released allows you to pass a `KeyboardKey` enum value in your V programs, instead of a plain int.
+@[inline]
+pub fn vis_key_released(key KeyboardKey) bool {
+	return is_key_released(int(key))
+}
+
+// vset_exit_key allows you to pass a `KeyboardKey` enum value in your V programs, instead of a plain int.
+@[inline]
+pub fn vset_exit_key(key KeyboardKey) {
+	set_exit_key(int(key))
+}
+
+// log level
+
 // vset_trace_log_level allows you to pass a `TraceLogLevel` enum value in your V programs, instead of a plain int.
 @[inline]
 pub fn vset_trace_log_level(log_level TraceLogLevel) {
 	set_trace_log_level(int(log_level))
+}
+
+// Mouse button related
+
+// vis_mouse_button_pressed allows you to pass a `MouseButton` enum value in your V programs, instead of a plain int.
+@[inline]
+pub fn vis_mouse_button_pressed(button MouseButton) bool {
+	return is_mouse_button_pressed(int(button))
+}
+
+// vis_mouse_button_down allows you to pass a `MouseButton` enum value in your V programs, instead of a plain int.
+@[inline]
+pub fn vis_mouse_button_down(button MouseButton) bool {
+	return is_mouse_button_down(int(button))
+}
+
+// vis_mouse_button_released allows you to pass a `MouseButton` enum value in your V programs, instead of a plain int.
+@[inline]
+pub fn vis_mouse_button_released(button MouseButton) bool {
+	return is_mouse_button_released(int(button))
+}
+
+// vis_mouse_button_up allows you to pass a `MouseButton` enum value in your V programs, instead of a plain int.
+@[inline]
+pub fn vis_mouse_button_up(button MouseButton) bool {
+	return is_mouse_button_up(int(button))
+}
+
+// GamePad related
+
+//  vis_gamepad_aviable allows you to pass a `GamepadButton` enum value in your V programs, instead of a plain int.
+@[inline]
+pub fn vis_gamepad_aviable(gamepad GamepadButton) bool {
+	return is_gamepad_available(int(gamepad))
+}
+
+//  vis_gamepad_button_pressed allows you to pass a `GamepadButton` enum value in your V programs, instead of a plain int.
+@[inline]
+pub fn vis_gamepad_button_pressed(gamepad int, button GamepadButton) bool {
+	return is_gamepad_button_pressed(gamepad, int(button))
+}
+
+//  vis_gamepad_button_down allows you to pass a `GamepadButton` enum value in your V programs, instead of a plain int.
+@[inline]
+pub fn vis_gamepad_button_down(gamepad int, button GamepadButton) bool {
+	return is_gamepad_button_down(gamepad, int(button))
+}
+
+//  vis_gamepad_button_released allows you to pass a `GamepadButton` enum value in your V programs, instead of a plain int.
+@[inline]
+pub fn vis_gamepad_button_released(gamepad int, button GamepadButton) bool {
+	return is_gamepad_button_released(gamepad, int(button))
+}
+
+//  vis_gamepad_button_up allows you to pass a `GamepadButton` enum value in your V programs, instead of a plain int.
+@[inline]
+pub fn vis_gamepad_button_up(gamepad int, button GamepadButton) bool {
+	return is_gamepad_button_up(gamepad, int(button))
+}
+
+//  vget_gamepad_axis_movement allows you to pass a `GamepadAxis` enum value in your V programs, instead of a plain int.
+@[inline]
+pub fn vget_gamepad_axis_movement(gamepad int, axis GamepadAxis) bool {
+	return get_gamepad_axis_movement(gamepad, int(axis))
+}
+
+//  vis_gesture_detected allows you to pass a `Gesture` enum value in your V programs, instead of a plain int.
+@[inline]
+pub fn vis_gesture_detected(gesture Gesture) bool {
+	return is_gesture_detected(u32(gesture))
 }
