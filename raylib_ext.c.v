@@ -164,7 +164,7 @@ pub fn vis_gamepad_button_up(gamepad int, button GamepadButton) bool {
 
 //  vget_gamepad_axis_movement allows you to pass a `GamepadAxis` enum value in your V programs, instead of a plain int.
 @[inline]
-pub fn vget_gamepad_axis_movement(gamepad int, axis GamepadAxis) bool {
+pub fn vget_gamepad_axis_movement(gamepad int, axis GamepadAxis) f32 {
 	return get_gamepad_axis_movement(gamepad, int(axis))
 }
 
