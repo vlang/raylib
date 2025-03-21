@@ -16,7 +16,7 @@ module raylib
 #flag wasm32_emscripten -sUSE_GLFW=3
 #flag wasm32_emscripten -sASYNCIFY
 #flag wasm32_emscripten -sEXPORTED_RUNTIME_METHODS=ccall
-#flag wasm32_emscripten -lraylib
+#flag wasm32_emscripten -lraylib.web
 #flag wasm32_emscripten -I $env('RAYLIB_WASM_FOLDER')
 #flag wasm32_emscripten -L $env('RAYLIB_WASM_FOLDER')
 
