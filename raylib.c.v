@@ -961,7 +961,7 @@ fn C.InitWindow(int, int, &char)
 // Initialize window and OpenGL context
 @[inline]
 pub fn init_window(width int, height int, title string) {
-	C.InitWindow(width, height, title.str)
+	C.InitWindow(width, height, &char(title.str))
 }
 
 fn C.CloseWindow()
@@ -1121,7 +1121,7 @@ fn C.SetWindowTitle(&char)
 // Set title for window
 @[inline]
 pub fn set_window_title(title string) {
-	C.SetWindowTitle(title.str)
+	C.SetWindowTitle(&char(title.str))
 }
 
 fn C.SetWindowPosition(int, int)
@@ -1315,7 +1315,7 @@ fn C.SetClipboardText(&char)
 // Set clipboard text content
 @[inline]
 pub fn set_clipboard_text(text string) {
-	C.SetClipboardText(text.str)
+	C.SetClipboardText(&char(text.str))
 }
 
 fn C.GetClipboardText() &char
@@ -1557,7 +1557,7 @@ fn C.LoadShader(&char, &char) Shader
 // Load shader from files and bind default locations
 @[inline]
 pub fn load_shader(vs_file_name string, fs_file_name string) Shader {
-	return C.LoadShader(vs_file_name.str, fs_file_name.str)
+	return C.LoadShader(&char(vs_file_name.str), &char(fs_file_name.str))
 }
 
 fn C.LoadShaderFromMemory(&char, &char) Shader
@@ -1565,7 +1565,7 @@ fn C.LoadShaderFromMemory(&char, &char) Shader
 // Load shader from code strings and bind default locations
 @[inline]
 pub fn load_shader_from_memory(vs_code string, fs_code string) Shader {
-	return C.LoadShaderFromMemory(vs_code.str, fs_code.str)
+	return C.LoadShaderFromMemory(&char(vs_code.str), &char(fs_code.str))
 }
 
 fn C.IsShaderValid(Shader) bool
@@ -1581,7 +1581,7 @@ fn C.GetShaderLocation(Shader, &char) int
 // Get shader uniform location
 @[inline]
 pub fn get_shader_location(shader Shader, uniform_name string) int {
-	return C.GetShaderLocation(shader, uniform_name.str)
+	return C.GetShaderLocation(shader, &char(uniform_name.str))
 }
 
 fn C.GetShaderLocationAttrib(Shader, &char) int
@@ -1589,7 +1589,7 @@ fn C.GetShaderLocationAttrib(Shader, &char) int
 // Get shader attribute location
 @[inline]
 pub fn get_shader_location_attrib(shader Shader, attrib_name string) int {
-	return C.GetShaderLocationAttrib(shader, attrib_name.str)
+	return C.GetShaderLocationAttrib(shader, &char(attrib_name.str))
 }
 
 fn C.SetShaderValue(Shader, int, voidptr, int)
@@ -1789,7 +1789,7 @@ fn C.TakeScreenshot(&char)
 // Takes a screenshot of current screen (filename extension defines format)
 @[inline]
 pub fn take_screenshot(file_name string) {
-	C.TakeScreenshot(file_name.str)
+	C.TakeScreenshot(&char(file_name.str))
 }
 
 fn C.SetConfigFlags(ConfigFlags)
@@ -1805,7 +1805,7 @@ fn C.OpenURL(&char)
 // Open URL with default system browser (if available)
 @[inline]
 pub fn open_url(url string) {
-	C.OpenURL(url.str)
+	C.OpenURL(&char(url.str))
 }
 
 fn C.TraceLog(int, &char, ...TraceLogLevel)
@@ -1813,7 +1813,7 @@ fn C.TraceLog(int, &char, ...TraceLogLevel)
 // Show trace log messages (LOG_DEBUG, LOG_INFO, LOG_WARNING, LOG_ERROR...)
 @[inline]
 pub fn trace_log(log_level int, text string, args ...TraceLogLevel) {
-	C.TraceLog(log_level, text.str, ...args)
+	C.TraceLog(log_level, &char(text.str), ...args)
 }
 
 fn C.SetTraceLogLevel(int)
@@ -1893,7 +1893,7 @@ fn C.LoadFileData(&char, &int) &u8
 // Load file data as byte array (read)
 @[inline]
 pub fn load_file_data(file_name string, data_size &int) &u8 {
-	return C.LoadFileData(file_name.str, data_size)
+	return C.LoadFileData(&char(file_name.str), data_size)
 }
 
 fn C.UnloadFileData(&u8)
@@ -1909,7 +1909,7 @@ fn C.SaveFileData(&char, voidptr, int) bool
 // Save data to file from byte array (write), returns true on success
 @[inline]
 pub fn save_file_data(file_name string, data voidptr, data_size int) bool {
-	return C.SaveFileData(file_name.str, data, data_size)
+	return C.SaveFileData(&char(file_name.str), data, data_size)
 }
 
 fn C.ExportDataAsCode(&u8, int, &char) bool
@@ -1917,7 +1917,7 @@ fn C.ExportDataAsCode(&u8, int, &char) bool
 // Export data to code (.h), returns true on success
 @[inline]
 pub fn export_data_as_code(data &u8, data_size int, file_name string) bool {
-	return C.ExportDataAsCode(data, data_size, file_name.str)
+	return C.ExportDataAsCode(data, data_size, &char(file_name.str))
 }
 
 fn C.LoadFileText(&char) &char
@@ -1926,7 +1926,7 @@ fn C.LoadFileText(&char) &char
 @[inline]
 pub fn load_file_text(file_name string) string {
 	unsafe {
-		return C.LoadFileText(file_name.str).vstring()
+		return C.LoadFileText(&char(file_name.str)).vstring()
 	}
 }
 
@@ -1935,7 +1935,7 @@ fn C.UnloadFileText(&char)
 // Unload file text data allocated by LoadFileText()
 @[inline]
 pub fn unload_file_text(text string) {
-	C.UnloadFileText(text.str)
+	C.UnloadFileText(&char(text.str))
 }
 
 fn C.SaveFileText(&char, &char) bool
@@ -1943,7 +1943,7 @@ fn C.SaveFileText(&char, &char) bool
 // Save text data to file (write), string must be '\0' terminated, returns true on success
 @[inline]
 pub fn save_file_text(file_name string, text string) bool {
-	return C.SaveFileText(file_name.str, text.str)
+	return C.SaveFileText(&char(file_name.str), &char(text.str))
 }
 
 fn C.FileExists(&char) bool
@@ -1951,7 +1951,7 @@ fn C.FileExists(&char) bool
 // Check if file exists
 @[inline]
 pub fn file_exists(file_name string) bool {
-	return C.FileExists(file_name.str)
+	return C.FileExists(&char(file_name.str))
 }
 
 fn C.DirectoryExists(&char) bool
@@ -1959,7 +1959,7 @@ fn C.DirectoryExists(&char) bool
 // Check if a directory path exists
 @[inline]
 pub fn directory_exists(dir_path string) bool {
-	return C.DirectoryExists(dir_path.str)
+	return C.DirectoryExists(&char(dir_path.str))
 }
 
 fn C.IsFileExtension(&char, &char) bool
@@ -1967,7 +1967,7 @@ fn C.IsFileExtension(&char, &char) bool
 // Check file extension (including point: .png, .wav)
 @[inline]
 pub fn is_file_extension(file_name string, ext string) bool {
-	return C.IsFileExtension(file_name.str, ext.str)
+	return C.IsFileExtension(&char(file_name.str), &char(ext.str))
 }
 
 fn C.GetFileLength(&char) int
@@ -1975,7 +1975,7 @@ fn C.GetFileLength(&char) int
 // Get file length in bytes (NOTE: GetFileSize() conflicts with windows.h)
 @[inline]
 pub fn get_file_length(file_name string) int {
-	return C.GetFileLength(file_name.str)
+	return C.GetFileLength(&char(file_name.str))
 }
 
 fn C.GetFileExtension(&char) &char
@@ -1984,7 +1984,7 @@ fn C.GetFileExtension(&char) &char
 @[inline]
 pub fn get_file_extension(file_name string) string {
 	unsafe {
-		return C.GetFileExtension(file_name.str).vstring()
+		return C.GetFileExtension(&char(file_name.str)).vstring()
 	}
 }
 
@@ -1994,7 +1994,7 @@ fn C.GetFileName(&char) &char
 @[inline]
 pub fn get_file_name(file_path string) string {
 	unsafe {
-		return C.GetFileName(file_path.str).vstring()
+		return C.GetFileName(&char(file_path.str)).vstring()
 	}
 }
 
@@ -2004,7 +2004,7 @@ fn C.GetFileNameWithoutExt(&char) &char
 @[inline]
 pub fn get_file_name_without_ext(file_path string) string {
 	unsafe {
-		return C.GetFileNameWithoutExt(file_path.str).vstring()
+		return C.GetFileNameWithoutExt(&char(file_path.str)).vstring()
 	}
 }
 
@@ -2014,7 +2014,7 @@ fn C.GetDirectoryPath(&char) &char
 @[inline]
 pub fn get_directory_path(file_path string) string {
 	unsafe {
-		return C.GetDirectoryPath(file_path.str).vstring()
+		return C.GetDirectoryPath(&char(file_path.str)).vstring()
 	}
 }
 
@@ -2024,7 +2024,7 @@ fn C.GetPrevDirectoryPath(&char) &char
 @[inline]
 pub fn get_prev_directory_path(dir_path string) string {
 	unsafe {
-		return C.GetPrevDirectoryPath(dir_path.str).vstring()
+		return C.GetPrevDirectoryPath(&char(dir_path.str)).vstring()
 	}
 }
 
@@ -2053,7 +2053,7 @@ fn C.MakeDirectory(&char) int
 // Create directories (including full path requested), returns 0 on success
 @[inline]
 pub fn make_directory(dir_path string) int {
-	return C.MakeDirectory(dir_path.str)
+	return C.MakeDirectory(&char(dir_path.str))
 }
 
 fn C.ChangeDirectory(&char) bool
@@ -2061,7 +2061,7 @@ fn C.ChangeDirectory(&char) bool
 // Change working directory, return true on success
 @[inline]
 pub fn change_directory(dir string) bool {
-	return C.ChangeDirectory(dir.str)
+	return C.ChangeDirectory(&char(dir.str))
 }
 
 fn C.IsPathFile(&char) bool
@@ -2069,7 +2069,7 @@ fn C.IsPathFile(&char) bool
 // Check if a given path is a file or a directory
 @[inline]
 pub fn is_path_file(path string) bool {
-	return C.IsPathFile(path.str)
+	return C.IsPathFile(&char(path.str))
 }
 
 fn C.IsFileNameValid(&char) bool
@@ -2077,7 +2077,7 @@ fn C.IsFileNameValid(&char) bool
 // Check if fileName is valid for the platform/OS
 @[inline]
 pub fn is_file_name_valid(file_name string) bool {
-	return C.IsFileNameValid(file_name.str)
+	return C.IsFileNameValid(&char(file_name.str))
 }
 
 fn C.LoadDirectoryFiles(&char) FilePathList
@@ -2085,7 +2085,7 @@ fn C.LoadDirectoryFiles(&char) FilePathList
 // Load directory filepaths
 @[inline]
 pub fn load_directory_files(dir_path string) FilePathList {
-	return C.LoadDirectoryFiles(dir_path.str)
+	return C.LoadDirectoryFiles(&char(dir_path.str))
 }
 
 fn C.LoadDirectoryFilesEx(&char, &char, bool) FilePathList
@@ -2093,7 +2093,7 @@ fn C.LoadDirectoryFilesEx(&char, &char, bool) FilePathList
 // Load directory filepaths with extension filtering and recursive directory scan. Use 'DIR' in the filter string to include directories in the result
 @[inline]
 pub fn load_directory_files_ex(base_path string, filter string, scan_subdirs bool) FilePathList {
-	return C.LoadDirectoryFilesEx(base_path.str, filter.str, scan_subdirs)
+	return C.LoadDirectoryFilesEx(&char(base_path.str), &char(filter.str), scan_subdirs)
 }
 
 fn C.UnloadDirectoryFiles(FilePathList)
@@ -2133,7 +2133,7 @@ fn C.GetFileModTime(&char) i64
 // Get file modification time (last write time)
 @[inline]
 pub fn get_file_mod_time(file_name string) i64 {
-	return C.GetFileModTime(file_name.str)
+	return C.GetFileModTime(&char(file_name.str))
 }
 
 fn C.CompressData(&u8, int, &int) &u8
@@ -2199,7 +2199,7 @@ fn C.LoadAutomationEventList(&char) AutomationEventList
 // Load automation events list from file, NULL for empty list, capacity = MAX_AUTOMATION_EVENTS
 @[inline]
 pub fn load_automation_event_list(file_name string) AutomationEventList {
-	return C.LoadAutomationEventList(file_name.str)
+	return C.LoadAutomationEventList(&char(file_name.str))
 }
 
 fn C.UnloadAutomationEventList(AutomationEventList)
@@ -2215,7 +2215,7 @@ fn C.ExportAutomationEventList(AutomationEventList, &char) bool
 // Export automation events list as text file
 @[inline]
 pub fn export_automation_event_list(list AutomationEventList, file_name string) bool {
-	return C.ExportAutomationEventList(list, file_name.str)
+	return C.ExportAutomationEventList(list, &char(file_name.str))
 }
 
 fn C.SetAutomationEventList(&AutomationEventList)
@@ -2401,7 +2401,7 @@ fn C.SetGamepadMappings(&char) int
 // Set internal gamepad mappings (SDL_GameControllerDB)
 @[inline]
 pub fn set_gamepad_mappings(mappings string) int {
-	return C.SetGamepadMappings(mappings.str)
+	return C.SetGamepadMappings(&char(mappings.str))
 }
 
 fn C.SetGamepadVibration(int, f32, f32, f32)
@@ -3178,7 +3178,7 @@ fn C.LoadImage(&char) Image
 // Load image from file into CPU memory (RAM)
 @[inline]
 pub fn load_image(file_name string) Image {
-	return C.LoadImage(file_name.str)
+	return C.LoadImage(&char(file_name.str))
 }
 
 fn C.LoadImageRaw(&char, int, int, int, int) Image
@@ -3186,7 +3186,7 @@ fn C.LoadImageRaw(&char, int, int, int, int) Image
 // Load image from RAW file data
 @[inline]
 pub fn load_image_raw(file_name string, width int, height int, format int, header_size int) Image {
-	return C.LoadImageRaw(file_name.str, width, height, format, header_size)
+	return C.LoadImageRaw(&char(file_name.str), width, height, format, header_size)
 }
 
 fn C.LoadImageAnim(&char, &int) Image
@@ -3194,7 +3194,7 @@ fn C.LoadImageAnim(&char, &int) Image
 // Load image sequence from file (frames appended to image.data)
 @[inline]
 pub fn load_image_anim(file_name string, frames &int) Image {
-	return C.LoadImageAnim(file_name.str, frames)
+	return C.LoadImageAnim(&char(file_name.str), frames)
 }
 
 fn C.LoadImageAnimFromMemory(&char, &u8, int, &int) Image
@@ -3202,7 +3202,7 @@ fn C.LoadImageAnimFromMemory(&char, &u8, int, &int) Image
 // Load image sequence from memory buffer
 @[inline]
 pub fn load_image_anim_from_memory(file_type string, file_data &u8, data_size int, frames &int) Image {
-	return C.LoadImageAnimFromMemory(file_type.str, file_data, data_size, frames)
+	return C.LoadImageAnimFromMemory(&char(file_type.str), file_data, data_size, frames)
 }
 
 fn C.LoadImageFromMemory(&char, &u8, int) Image
@@ -3210,7 +3210,7 @@ fn C.LoadImageFromMemory(&char, &u8, int) Image
 // Load image from memory buffer, fileType refers to extension: i.e. '.png'
 @[inline]
 pub fn load_image_from_memory(file_type string, file_data &u8, data_size int) Image {
-	return C.LoadImageFromMemory(file_type.str, file_data, data_size)
+	return C.LoadImageFromMemory(&char(file_type.str), file_data, data_size)
 }
 
 fn C.LoadImageFromTexture(Texture2D) Image
@@ -3250,7 +3250,7 @@ fn C.ExportImage(Image, &char) bool
 // Export image data to file, returns true on success
 @[inline]
 pub fn export_image(image Image, file_name string) bool {
-	return C.ExportImage(image, file_name.str)
+	return C.ExportImage(image, &char(file_name.str))
 }
 
 fn C.ExportImageToMemory(Image, &char, &int) &u8
@@ -3258,7 +3258,7 @@ fn C.ExportImageToMemory(Image, &char, &int) &u8
 // Export image to memory buffer
 @[inline]
 pub fn export_image_to_memory(image Image, file_type string, file_size &int) &u8 {
-	return C.ExportImageToMemory(image, file_type.str, file_size)
+	return C.ExportImageToMemory(image, &char(file_type.str), file_size)
 }
 
 fn C.ExportImageAsCode(Image, &char) bool
@@ -3266,7 +3266,7 @@ fn C.ExportImageAsCode(Image, &char) bool
 // Export image as code file defining an array of bytes, returns true on success
 @[inline]
 pub fn export_image_as_code(image Image, file_name string) bool {
-	return C.ExportImageAsCode(image, file_name.str)
+	return C.ExportImageAsCode(image, &char(file_name.str))
 }
 
 fn C.GenImageColor(int, int, Color) Image
@@ -3338,7 +3338,7 @@ fn C.GenImageText(int, int, &char) Image
 // Generate image: grayscale image from text data
 @[inline]
 pub fn gen_image_text(width int, height int, text string) Image {
-	return C.GenImageText(width, height, text.str)
+	return C.GenImageText(width, height, &char(text.str))
 }
 
 fn C.ImageCopy(Image) Image
@@ -3370,7 +3370,7 @@ fn C.ImageText(&char, int, Color) Image
 // Create an image from text (default font)
 @[inline]
 pub fn image_text(text string, font_size int, color Color) Image {
-	return C.ImageText(text.str, font_size, color)
+	return C.ImageText(&char(text.str), font_size, color)
 }
 
 fn C.ImageTextEx(Font, &char, f32, f32, Color) Image
@@ -3378,7 +3378,7 @@ fn C.ImageTextEx(Font, &char, f32, f32, Color) Image
 // Create an image from text (custom sprite font)
 @[inline]
 pub fn image_text_ex(font Font, text string, font_size f32, spacing f32, tint Color) Image {
-	return C.ImageTextEx(font, text.str, font_size, spacing, tint)
+	return C.ImageTextEx(font, &char(text.str), font_size, spacing, tint)
 }
 
 fn C.ImageFormat(&Image, int)
@@ -3794,7 +3794,7 @@ fn C.ImageDrawText(&Image, &char, int, int, int, Color)
 // Draw text (using default font) within an image (destination)
 @[inline]
 pub fn image_draw_text(dst &Image, text string, pos_x int, pos_y int, font_size int, color Color) {
-	C.ImageDrawText(dst, text.str, pos_x, pos_y, font_size, color)
+	C.ImageDrawText(dst, &char(text.str), pos_x, pos_y, font_size, color)
 }
 
 fn C.ImageDrawTextEx(&Image, Font, &char, Vector2, f32, f32, Color)
@@ -3802,7 +3802,7 @@ fn C.ImageDrawTextEx(&Image, Font, &char, Vector2, f32, f32, Color)
 // Draw text (custom sprite font) within an image (destination)
 @[inline]
 pub fn image_draw_text_ex(dst &Image, font Font, text string, position Vector2, font_size f32, spacing f32, tint Color) {
-	C.ImageDrawTextEx(dst, font, text.str, position, font_size, spacing, tint)
+	C.ImageDrawTextEx(dst, font, &char(text.str), position, font_size, spacing, tint)
 }
 
 fn C.LoadTexture(&char) Texture2D
@@ -3810,7 +3810,7 @@ fn C.LoadTexture(&char) Texture2D
 // Load texture from file into GPU memory (VRAM)
 @[inline]
 pub fn load_texture(file_name string) Texture2D {
-	return C.LoadTexture(file_name.str)
+	return C.LoadTexture(&char(file_name.str))
 }
 
 fn C.LoadTextureFromImage(Image) Texture2D
@@ -4106,7 +4106,7 @@ fn C.LoadFont(&char) Font
 // Load font from file into GPU memory (VRAM)
 @[inline]
 pub fn load_font(file_name string) Font {
-	return C.LoadFont(file_name.str)
+	return C.LoadFont(&char(file_name.str))
 }
 
 fn C.LoadFontEx(&char, int, &int, int) Font
@@ -4114,7 +4114,7 @@ fn C.LoadFontEx(&char, int, &int, int) Font
 // Load font from file with extended parameters, use NULL for codepoints and 0 for codepointCount to load the default character set, font size is provided in pixels height
 @[inline]
 pub fn load_font_ex(file_name string, font_size int, codepoints &int, codepoint_count int) Font {
-	return C.LoadFontEx(file_name.str, font_size, codepoints, codepoint_count)
+	return C.LoadFontEx(&char(file_name.str), font_size, codepoints, codepoint_count)
 }
 
 fn C.LoadFontFromImage(Image, Color, int) Font
@@ -4130,7 +4130,7 @@ fn C.LoadFontFromMemory(&char, &u8, int, int, &int, int) Font
 // Load font from memory buffer, fileType refers to extension: i.e. '.ttf'
 @[inline]
 pub fn load_font_from_memory(file_type string, file_data &u8, data_size int, font_size int, codepoints &int, codepoint_count int) Font {
-	return C.LoadFontFromMemory(file_type.str, file_data, data_size, font_size, codepoints,
+	return C.LoadFontFromMemory(&char(file_type.str), file_data, data_size, font_size, codepoints,
 		codepoint_count)
 }
 
@@ -4180,7 +4180,7 @@ fn C.ExportFontAsCode(Font, &char) bool
 // Export font as code file, returns true on success
 @[inline]
 pub fn export_font_as_code(font Font, file_name string) bool {
-	return C.ExportFontAsCode(font, file_name.str)
+	return C.ExportFontAsCode(font, &char(file_name.str))
 }
 
 fn C.DrawFPS(int, int)
@@ -4196,7 +4196,7 @@ fn C.DrawText(&char, int, int, int, Color)
 // Draw text (using default font)
 @[inline]
 pub fn draw_text(text string, pos_x int, pos_y int, font_size int, color Color) {
-	C.DrawText(text.str, pos_x, pos_y, font_size, color)
+	C.DrawText(&char(text.str), pos_x, pos_y, font_size, color)
 }
 
 fn C.DrawTextEx(Font, &char, Vector2, f32, f32, Color)
@@ -4204,7 +4204,7 @@ fn C.DrawTextEx(Font, &char, Vector2, f32, f32, Color)
 // Draw text using font and additional parameters
 @[inline]
 pub fn draw_text_ex(font Font, text string, position Vector2, font_size f32, spacing f32, tint Color) {
-	C.DrawTextEx(font, text.str, position, font_size, spacing, tint)
+	C.DrawTextEx(font, &char(text.str), position, font_size, spacing, tint)
 }
 
 fn C.DrawTextPro(Font, &char, Vector2, Vector2, f32, f32, f32, Color)
@@ -4212,7 +4212,7 @@ fn C.DrawTextPro(Font, &char, Vector2, Vector2, f32, f32, f32, Color)
 // Draw text using Font and pro parameters (rotation)
 @[inline]
 pub fn draw_text_pro(font Font, text string, position Vector2, origin Vector2, rotation f32, font_size f32, spacing f32, tint Color) {
-	C.DrawTextPro(font, text.str, position, origin, rotation, font_size, spacing, tint)
+	C.DrawTextPro(font, &char(text.str), position, origin, rotation, font_size, spacing, tint)
 }
 
 fn C.DrawTextCodepoint(Font, int, Vector2, f32, Color)
@@ -4245,7 +4245,7 @@ fn C.MeasureText(&char, int) int
 // Measure string width for default font
 @[inline]
 pub fn measure_text(text string, font_size int) int {
-	return C.MeasureText(text.str, font_size)
+	return C.MeasureText(&char(text.str), font_size)
 }
 
 fn C.MeasureTextEx(Font, &char, f32, f32) Vector2
@@ -4253,7 +4253,7 @@ fn C.MeasureTextEx(Font, &char, f32, f32) Vector2
 // Measure string size for Font
 @[inline]
 pub fn measure_text_ex(font Font, text string, font_size f32, spacing f32) Vector2 {
-	return C.MeasureTextEx(font, text.str, font_size, spacing)
+	return C.MeasureTextEx(font, &char(text.str), font_size, spacing)
 }
 
 fn C.GetGlyphIndex(Font, int) int
@@ -4295,7 +4295,7 @@ fn C.UnloadUTF8(&char)
 // Unload UTF-8 text encoded from codepoints array
 @[inline]
 pub fn unload_utf8(text string) {
-	C.UnloadUTF8(text.str)
+	C.UnloadUTF8(&char(text.str))
 }
 
 fn C.LoadCodepoints(&char, &int) &int
@@ -4303,7 +4303,7 @@ fn C.LoadCodepoints(&char, &int) &int
 // Load all codepoints from a UTF-8 text string, codepoints count returned by parameter
 @[inline]
 pub fn load_codepoints(text string, count &int) &int {
-	return C.LoadCodepoints(text.str, count)
+	return C.LoadCodepoints(&char(text.str), count)
 }
 
 fn C.UnloadCodepoints(&int)
@@ -4319,7 +4319,7 @@ fn C.GetCodepointCount(&char) int
 // Get total number of codepoints in a UTF-8 encoded string
 @[inline]
 pub fn get_codepoint_count(text string) int {
-	return C.GetCodepointCount(text.str)
+	return C.GetCodepointCount(&char(text.str))
 }
 
 fn C.GetCodepoint(&char, &int) int
@@ -4327,7 +4327,7 @@ fn C.GetCodepoint(&char, &int) int
 // Get next codepoint in a UTF-8 encoded string, 0x3f('?') is returned on failure
 @[inline]
 pub fn get_codepoint(text string, codepoint_size &int) int {
-	return C.GetCodepoint(text.str, codepoint_size)
+	return C.GetCodepoint(&char(text.str), codepoint_size)
 }
 
 fn C.GetCodepointNext(&char, &int) int
@@ -4335,7 +4335,7 @@ fn C.GetCodepointNext(&char, &int) int
 // Get next codepoint in a UTF-8 encoded string, 0x3f('?') is returned on failure
 @[inline]
 pub fn get_codepoint_next(text string, codepoint_size &int) int {
-	return C.GetCodepointNext(text.str, codepoint_size)
+	return C.GetCodepointNext(&char(text.str), codepoint_size)
 }
 
 fn C.GetCodepointPrevious(&char, &int) int
@@ -4343,7 +4343,7 @@ fn C.GetCodepointPrevious(&char, &int) int
 // Get previous codepoint in a UTF-8 encoded string, 0x3f('?') is returned on failure
 @[inline]
 pub fn get_codepoint_previous(text string, codepoint_size &int) int {
-	return C.GetCodepointPrevious(text.str, codepoint_size)
+	return C.GetCodepointPrevious(&char(text.str), codepoint_size)
 }
 
 fn C.CodepointToUTF8(int, &int) &char
@@ -4361,7 +4361,7 @@ fn C.TextCopy(&char, &char) int
 // Copy one string to another, returns bytes copied
 @[inline]
 pub fn text_copy(dst string, src string) int {
-	return C.TextCopy(dst.str, src.str)
+	return C.TextCopy(&char(dst.str), src.str)
 }
 
 fn C.TextIsEqual(&char, &char) bool
@@ -4369,7 +4369,7 @@ fn C.TextIsEqual(&char, &char) bool
 // Check if two text string are equal
 @[inline]
 pub fn text_is_equal(text1 string, text2 string) bool {
-	return C.TextIsEqual(text1.str, text2.str)
+	return C.TextIsEqual(&char(text1.str), text2.str)
 }
 
 fn C.TextLength(&char) u32
@@ -4377,7 +4377,7 @@ fn C.TextLength(&char) u32
 // Get text length, checks for '\0' ending
 @[inline]
 pub fn text_length(text string) u32 {
-	return C.TextLength(text.str)
+	return C.TextLength(&char(text.str))
 }
 
 fn C.TextFormat(&char, ...any) &char
@@ -4386,7 +4386,7 @@ fn C.TextFormat(&char, ...any) &char
 @[inline]
 pub fn text_format(text string, args ...any) string {
 	unsafe {
-		return C.TextFormat(text.str, ...args).vstring()
+		return C.TextFormat(&char(text.str), ...args).vstring()
 	}
 }
 
@@ -4396,7 +4396,7 @@ fn C.TextSubtext(&char, int, int) &char
 @[inline]
 pub fn text_subtext(text string, position int, length int) string {
 	unsafe {
-		return C.TextSubtext(text.str, position, length).vstring()
+		return C.TextSubtext(&char(text.str), position, length).vstring()
 	}
 }
 
@@ -4406,7 +4406,7 @@ fn C.TextReplace(&char, &char, &char) &char
 @[inline]
 pub fn text_replace(text string, replace string, by string) string {
 	unsafe {
-		return C.TextReplace(text.str, replace.str, by.str).vstring()
+		return C.TextReplace(&char(text.str), &char(replace.str), &char(by.str)).vstring()
 	}
 }
 
@@ -4416,7 +4416,7 @@ fn C.TextInsert(&char, &char, int) &char
 @[inline]
 pub fn text_insert(text string, insert string, position int) string {
 	unsafe {
-		return C.TextInsert(text.str, insert.str, position).vstring()
+		return C.TextInsert(&char(text.str), &char(insert.str), position).vstring()
 	}
 }
 
@@ -4426,7 +4426,7 @@ fn C.TextJoin(&&char, int, &char) &char
 @[inline]
 pub fn text_join(text_list &&char, count int, delimiter string) string {
 	unsafe {
-		return C.TextJoin(text_list, count, delimiter.str).vstring()
+		return C.TextJoin(text_list, count, &char(delimiter.str)).vstring()
 	}
 }
 
@@ -4435,7 +4435,7 @@ fn C.TextSplit(&char, char, &int) &&char
 // Split text into multiple strings
 @[inline]
 pub fn text_split(text string, delimiter char, count &int) &&char {
-	return C.TextSplit(text.str, delimiter, count)
+	return C.TextSplit(&char(text.str), delimiter, count)
 }
 
 fn C.TextAppend(&char, &char, &int)
@@ -4443,7 +4443,7 @@ fn C.TextAppend(&char, &char, &int)
 // Append text at specific position and move cursor!
 @[inline]
 pub fn text_append(text string, append string, position &int) {
-	C.TextAppend(text.str, append.str, position)
+	C.TextAppend(&char(text.str), &char(append.str), position)
 }
 
 fn C.TextFindIndex(&char, &char) int
@@ -4451,7 +4451,7 @@ fn C.TextFindIndex(&char, &char) int
 // Find first text occurrence within a string
 @[inline]
 pub fn text_find_index(text string, find string) int {
-	return C.TextFindIndex(text.str, find.str)
+	return C.TextFindIndex(&char(text.str), &char(find.str))
 }
 
 fn C.TextToUpper(&char) &char
@@ -4460,7 +4460,7 @@ fn C.TextToUpper(&char) &char
 @[inline]
 pub fn text_to_upper(text string) string {
 	unsafe {
-		return C.TextToUpper(text.str).vstring()
+		return C.TextToUpper(&char(text.str)).vstring()
 	}
 }
 
@@ -4470,7 +4470,7 @@ fn C.TextToLower(&char) &char
 @[inline]
 pub fn text_to_lower(text string) string {
 	unsafe {
-		return C.TextToLower(text.str).vstring()
+		return C.TextToLower(&char(text.str)).vstring()
 	}
 }
 
@@ -4480,7 +4480,7 @@ fn C.TextToPascal(&char) &char
 @[inline]
 pub fn text_to_pascal(text string) string {
 	unsafe {
-		return C.TextToPascal(text.str).vstring()
+		return C.TextToPascal(&char(text.str)).vstring()
 	}
 }
 
@@ -4490,7 +4490,7 @@ fn C.TextToSnake(&char) &char
 @[inline]
 pub fn text_to_snake(text string) string {
 	unsafe {
-		return C.TextToSnake(text.str).vstring()
+		return C.TextToSnake(&char(text.str)).vstring()
 	}
 }
 
@@ -4500,7 +4500,7 @@ fn C.TextToCamel(&char) &char
 @[inline]
 pub fn text_to_camel(text string) string {
 	unsafe {
-		return C.TextToCamel(text.str).vstring()
+		return C.TextToCamel(&char(text.str)).vstring()
 	}
 }
 
@@ -4509,7 +4509,7 @@ fn C.TextToInteger(&char) int
 // Get integer value from text (negative values not supported)
 @[inline]
 pub fn text_to_integer(text string) int {
-	return C.TextToInteger(text.str)
+	return C.TextToInteger(&char(text.str))
 }
 
 fn C.TextToFloat(&char) f32
@@ -4517,7 +4517,7 @@ fn C.TextToFloat(&char) f32
 // Get float value from text (negative values not supported)
 @[inline]
 pub fn text_to_float(text string) f32 {
-	return C.TextToFloat(text.str)
+	return C.TextToFloat(&char(text.str))
 }
 
 fn C.DrawLine3D(Vector3, Vector3, Color)
@@ -4693,7 +4693,7 @@ fn C.LoadModel(&char) Model
 // Load model from files (meshes and materials)
 @[inline]
 pub fn load_model(file_name string) Model {
-	return C.LoadModel(file_name.str)
+	return C.LoadModel(&char(file_name.str))
 }
 
 fn C.LoadModelFromMesh(Mesh) Model
@@ -4870,7 +4870,7 @@ fn C.ExportMesh(Mesh, &char) bool
 // Export mesh data to file, returns true on success
 @[inline]
 pub fn export_mesh(mesh Mesh, file_name string) bool {
-	return C.ExportMesh(mesh, file_name.str)
+	return C.ExportMesh(mesh, &char(file_name.str))
 }
 
 fn C.ExportMeshAsCode(Mesh, &char) bool
@@ -4878,7 +4878,7 @@ fn C.ExportMeshAsCode(Mesh, &char) bool
 // Export mesh as code file (.h) defining multiple arrays of vertex attributes
 @[inline]
 pub fn export_mesh_as_code(mesh Mesh, file_name string) bool {
-	return C.ExportMeshAsCode(mesh, file_name.str)
+	return C.ExportMeshAsCode(mesh, &char(file_name.str))
 }
 
 fn C.GenMeshPoly(int, f32) Mesh
@@ -4974,7 +4974,7 @@ fn C.LoadMaterials(&char, &int) &Material
 // Load materials from model file
 @[inline]
 pub fn load_materials(file_name string, material_count &int) &Material {
-	return C.LoadMaterials(file_name.str, material_count)
+	return C.LoadMaterials(&char(file_name.str), material_count)
 }
 
 fn C.LoadMaterialDefault() Material
@@ -5022,7 +5022,7 @@ fn C.LoadModelAnimations(&char, &int) &ModelAnimation
 // Load model animations from file
 @[inline]
 pub fn load_model_animations(file_name string, anim_count &int) &ModelAnimation {
-	return C.LoadModelAnimations(file_name.str, anim_count)
+	return C.LoadModelAnimations(&char(file_name.str), anim_count)
 }
 
 fn C.UpdateModelAnimation(Model, ModelAnimation, int)
@@ -5174,7 +5174,7 @@ fn C.LoadWave(&char) Wave
 // Load wave data from file
 @[inline]
 pub fn load_wave(file_name string) Wave {
-	return C.LoadWave(file_name.str)
+	return C.LoadWave(&char(file_name.str))
 }
 
 fn C.LoadWaveFromMemory(&char, &u8, int) Wave
@@ -5182,7 +5182,7 @@ fn C.LoadWaveFromMemory(&char, &u8, int) Wave
 // Load wave from memory buffer, fileType refers to extension: i.e. '.wav'
 @[inline]
 pub fn load_wave_from_memory(file_type string, file_data &u8, data_size int) Wave {
-	return C.LoadWaveFromMemory(file_type.str, file_data, data_size)
+	return C.LoadWaveFromMemory(&char(file_type.str), file_data, data_size)
 }
 
 fn C.IsWaveValid(Wave) bool
@@ -5198,7 +5198,7 @@ fn C.LoadSound(&char) Sound
 // Load sound from file
 @[inline]
 pub fn load_sound(file_name string) Sound {
-	return C.LoadSound(file_name.str)
+	return C.LoadSound(&char(file_name.str))
 }
 
 fn C.LoadSoundFromWave(Wave) Sound
@@ -5262,7 +5262,7 @@ fn C.ExportWave(Wave, &char) bool
 // Export wave data to file, returns true on success
 @[inline]
 pub fn export_wave(wave Wave, file_name string) bool {
-	return C.ExportWave(wave, file_name.str)
+	return C.ExportWave(wave, &char(file_name.str))
 }
 
 fn C.ExportWaveAsCode(Wave, &char) bool
@@ -5270,7 +5270,7 @@ fn C.ExportWaveAsCode(Wave, &char) bool
 // Export wave sample data to code (.h), returns true on success
 @[inline]
 pub fn export_wave_as_code(wave Wave, file_name string) bool {
-	return C.ExportWaveAsCode(wave, file_name.str)
+	return C.ExportWaveAsCode(wave, &char(file_name.str))
 }
 
 fn C.PlaySound(Sound)
@@ -5382,7 +5382,7 @@ fn C.LoadMusicStream(&char) Music
 // Load music stream from file
 @[inline]
 pub fn load_music_stream(file_name string) Music {
-	return C.LoadMusicStream(file_name.str)
+	return C.LoadMusicStream(&char(file_name.str))
 }
 
 fn C.LoadMusicStreamFromMemory(&char, &u8, int) Music
@@ -5390,7 +5390,7 @@ fn C.LoadMusicStreamFromMemory(&char, &u8, int) Music
 // Load music stream from data
 @[inline]
 pub fn load_music_stream_from_memory(file_type string, data &u8, data_size int) Music {
-	return C.LoadMusicStreamFromMemory(file_type.str, data, data_size)
+	return C.LoadMusicStreamFromMemory(&char(file_type.str), data, data_size)
 }
 
 fn C.IsMusicValid(Music) bool
