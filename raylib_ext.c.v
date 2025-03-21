@@ -6,10 +6,20 @@
 module raylib
 
 #flag linux -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
+
 #flag darwin -lraylib -lm -framework Foundation -framework AppKit -framework OpenGL -framework CoreVideo
+
 #flag windows -DNOUSER -DNOSHOWWINDOW -DNOGDI
 #flag windows -lraylib@START_LIBS
 #flag windows -lgdi32 -lwinmm
+
+#flag wasm32_emscripten -sUSE_GLFW=3
+#flag wasm32_emscripten -sASYNCIFY
+#flag wasm32_emscripten -sEXPORTED_RUNTIME_METHODS=ccall
+#flag wasm32_emscripten -lraylib
+#flag wasm32_emscripten -I $env('RAYLIB_WASM_FOLDER')
+#flag wasm32_emscripten -L $env('RAYLIB_WASM_FOLDER')
+
 #include <raylib.h>
 
 @[typedef]
