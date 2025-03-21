@@ -13,14 +13,24 @@ module raylib
 #flag windows -lraylib@START_LIBS
 #flag windows -lgdi32 -lwinmm
 
+// See https://github.com/raysan5/raylib/wiki/Working-for-Web-(HTML5) for instructions on how to build/compile
+// programs targeting browsers, using the emscripten toolchain. The options here are 
 #flag wasm32_emscripten -sUSE_GLFW=3
 #flag wasm32_emscripten -sASYNCIFY
 #flag wasm32_emscripten -sEXPORTED_RUNTIME_METHODS=ccall
+#flag wasm32_emscripten -sGL_ENABLE_GET_PROC_ADDRESS=1
+// Allow customisation of the include/library location, by passing `-d RAYLIB_WASM_FOLDER=/some/path`
+// See also https://github.com/raysan5/raylib/releases/download/5.5/raylib-5.5_webassembly.zip for how to get an older version.
+// Note: that .zip file contains `libraylib.a`, but more recent raylib builds (5.6),
+// have that renamed to `libraylib.web.a`, which allows you to have a non conflicting
+// libraylib.a for your current platform too.
+#flag wasm32_emscripten -I $d('RAYLIB_WASM_FOLDER', '.')
+#flag wasm32_emscripten -L $d('RAYLIB_WASM_FOLDER', '.')
+#flag wasm32_emscripten -I $d('RAYLIB_WASM_FOLDER', '.')/include
+#flag wasm32_emscripten -L $d('RAYLIB_WASM_FOLDER', '.')/lib
+#flag wasm32_emscripten -I @VMODROOT/emscripten
+#flag wasm32_emscripten -L @VMODROOT/emscripten
 #flag wasm32_emscripten -lraylib.web
-#flag wasm32_emscripten -I $env('RAYLIB_WASM_FOLDER')
-#flag wasm32_emscripten -L $env('RAYLIB_WASM_FOLDER')
-#flag wasm32_emscripten -I $env('RAYLIB_WASM_FOLDER')/include
-#flag wasm32_emscripten -L $env('RAYLIB_WASM_FOLDER')/lib
 
 #include <raylib.h>
 
