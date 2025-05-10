@@ -14,11 +14,19 @@ module raylib
 #flag windows -lgdi32 -lwinmm
 
 // test	
-// if android{
-        // #include "android-ext/native_app_glue/android_native_app_glue.c"
-// }
-#flag android -llog -landroid -lEGL -lGLESv2 -lOpenSLES -lm
-#flag android -DPLATFORM_ANDROID -DGRAPHICS_API_OPENGL_ES2 -Iexternal/android/native_app_glue -Wno-implicit-const-int-float-conversion
+if android{
+         #include "android-ext/native_app_glue/android_native_app_glue.c"
+ }
+#flag android -llog
+#flag android -landroid
+#flag android -lEGL
+#flag android -lGLESv2
+#flag android -lOpenSLES
+#flag android -lm
+#flag android -DPLATFORM_ANDROID
+#flag android -DGRAPHICS_API_OPENGL_ES2
+#flag android -I external/android/native_app_glue
+#flag android -Wno-implicit-const-int-float-conversion
 
 // See https://github.com/raysan5/raylib/wiki/Working-for-Web-(HTML5) for instructions on how to build/compile
 // programs targeting browsers, using the emscripten toolchain. The options here are 
