@@ -5656,3 +5656,17 @@ fn C.DetachAudioMixedProcessor(AudioCallback)
 pub fn detach_audio_mixed_processor(processor AudioCallback) {
 	C.DetachAudioMixedProcessor(processor)
 }
+
+type CallbackMain = fn()
+
+__global (
+    fnMain CallbackMain
+)
+
+pub fn SetMainCallbackFunc(f CallbackMain){
+	fnMain = f
+}
+@[export: 'android_run']
+fn android_run(){
+	fnMain()
+}
