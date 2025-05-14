@@ -8,6 +8,8 @@ module raylib
 #flag linux -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
 
 #flag darwin -lraylib -lm -framework Foundation -framework AppKit -framework OpenGL -framework CoreVideo
+#flag darwin -I/opt/homebrew/include
+#flag darwin -L/opt/homebrew/lib
 
 #flag windows -DNOUSER -DNOSHOWWINDOW -DNOGDI
 #flag windows -lraylib@START_LIBS
