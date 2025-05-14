@@ -9,34 +9,20 @@ module raylib
 
 #flag darwin -lraylib -lm -framework Foundation -framework AppKit -framework OpenGL -framework CoreVideo
 
-#flag darwin -I/opt/homebrew/include
-#flag darwin -L/opt/homebrew/lib
-
 #flag windows -DNOUSER -DNOSHOWWINDOW -DNOGDI
 #flag windows -lraylib@START_LIBS
 #flag windows -lgdi32 -lwinmm
 
 // test	
-#flag android -llog
-#flag android -landroid
-#flag android -lEGL
-#flag android -lGLESv2
-#flag android -lOpenSLES
-#flag android -lm
-#flag android -DPLATFORM_ANDROID
-#flag android -DGRAPHICS_API_OPENGL_ES2
-
-#flag android -Wno-implicit-const-int-float-conversion
 #flag android -I@VMODROOT/android-ext/native_app_glue
-#flag android -L@VMODROOT/raylib/src
-#flag android -I@VMODROOT/raylib/src
-#flag android -l:libraylib.a
 $if android {
     #include "android_native_app_glue.c"
 }
 
+
+
 // See https://github.com/raysan5/raylib/wiki/Working-for-Web-(HTML5) for instructions on how to build/compile
-// programs targeting browsers, using the emscripten toolchain. The options here are
+// programs targeting browsers, using the emscripten toolchain. The options here are 
 #flag wasm32_emscripten -sUSE_GLFW=3
 #flag wasm32_emscripten -sASYNCIFY
 #flag wasm32_emscripten -sEXPORTED_RUNTIME_METHODS=ccall
