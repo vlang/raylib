@@ -1,23 +1,16 @@
-import raylib { Color, begin_drawing, clear_background, close_window, draw_text, end_drawing, init_window, set_target_fps, window_should_close }
+import raylib as rl
 
 const screen_width = 800
 const screen_height = 600
-const white = Color{255, 255, 255, 255}
-const blue = Color{0, 0, 200, 255}
+const white = rl.Color{255, 255, 255, 255}
+const blue = rl.Color{0, 0, 200, 255}
 
-@[export: 'android_run']
-fn run(){
-	init_window(screen_width, screen_height, 'Example of using V and Raylib together')
-	set_target_fps(60)
-	for !window_should_close() {
-		begin_drawing()
-		clear_background(white)
-		draw_text('Hello from V and Raylib.', 160, 270, 40, blue)
-		end_drawing()
-	}
-	close_window()
+rl.init_window(screen_width, screen_height, 'Example of using V and Raylib together')
+rl.set_target_fps(60)
+for !rl.window_should_close() {
+	rl.begin_drawing()
+	rl.clear_background(white)
+	rl.draw_text('Hello from V and Raylib.', 160, 270, 40, blue)
+	rl.end_drawing()
 }
-
-fn main(){
-	run()
-}
+rl.close_window()
