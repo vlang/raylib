@@ -919,20 +919,21 @@ pub enum BlendMode {
 	blend_custom_separate   = 7 // Blend textures using custom rgb/alpha separate src/dst factors (use rlSetBlendFactorsSeparate())
 }
 
+const gesture_none = unsafe { Gesture(0) }
+
 // Gesture
 @[flag]
 pub enum Gesture as u32 {
-	gesture_none        // No gesture
-	gesture_tap         // Tap gesture
-	gesture_doubletap   // Double tap gesture
-	gesture_hold        // Hold gesture
-	gesture_drag        // Drag gesture
-	gesture_swipe_right // Swipe right gesture
-	gesture_swipe_left  // Swipe left gesture
-	gesture_swipe_up    // Swipe up gesture
-	gesture_swipe_down  // Swipe down gesture
-	gesture_pinch_in    // Pinch in gesture
-	gesture_pinch_out   // Pinch out gesture
+	gesture_tap         // Tap gesture, 1
+	gesture_doubletap   // Double tap gesture, 2
+	gesture_hold        // Hold gesture, 4
+	gesture_drag        // Drag gesture, 8
+	gesture_swipe_right // Swipe right gesture, 16
+	gesture_swipe_left  // Swipe left gesture, 32
+	gesture_swipe_up    // Swipe up gesture, 64
+	gesture_swipe_down  // Swipe down gesture, 128
+	gesture_pinch_in    // Pinch in gesture, 256
+	gesture_pinch_out   // Pinch out gesture, 512
 }
 
 // Camera system modes
