@@ -573,22 +573,23 @@ pub type AudioCallback = fn (voidptr, u32)
 // System/Window config flags
 @[flag]
 pub enum ConfigFlags as u32 {
-	flag_vsync_hint               // Set to try enabling V-Sync on GPU
-	flag_fullscreen_mode          // Set to run program in fullscreen
-	flag_window_resizable         // Set to allow resizable window
-	flag_window_undecorated       // Set to disable window decoration (frame and buttons)
-	flag_window_hidden            // Set to hide window
-	flag_window_minimized         // Set to minimize window (iconify)
-	flag_window_maximized         // Set to maximize window (expanded to monitor)
-	flag_window_unfocused         // Set to window non focused
-	flag_window_topmost           // Set to window always on top
-	flag_window_always_run        // Set to allow windows running while minimized
-	flag_window_transparent       // Set to allow transparent framebuffer
-	flag_window_highdpi           // Set to support HighDPI
-	flag_window_mouse_passthrough // Set to support mouse passthrough, only supported when FLAG_WINDOW_UNDECORATED
-	flag_borderless_windowed_mode // Set to run program in borderless windowed mode
-	flag_msaa_4x_hint             // Set to try enabling MSAA 4X
-	flag_interlaced_hint          // Set to try enabling interlaced video format (for V3D)
+	flag_unused_1                 // 0x00000001
+	flag_fullscreen_mode          // Set to run program in fullscreen, 0x00000002
+	flag_window_resizable         // Set to allow resizable window, 0x00000004
+	flag_window_undecorated       // Set to disable window decoration (frame and buttons), 0x00000008
+	flag_window_transparent       // Set to allow transparent framebuffer, 0x00000010
+	flag_msaa_4x_hint             // Set to try enabling MSAA 4X, 0x00000020
+	flag_vsync_hint               // Set to try enabling V-Sync on GPU, 0x00000040
+	flag_window_hidden            // Set to hide window, 0x00000080
+	flag_window_always_run        // Set to allow windows running while minimized, 0x00000100
+	flag_window_minimized         // Set to minimize window (iconify), 0x00000200
+	flag_window_maximized         // Set to maximize window (expanded to monitor), 0x00000400
+	flag_window_unfocused         // Set to window non focused, 0x00000800
+	flag_window_topmost           // Set to window always on top, 0x00001000
+	flag_window_highdpi           // Set to support HighDPI, 0x00002000
+	flag_window_mouse_passthrough // Set to support mouse passthrough, only supported when FLAG_WINDOW_UNDECORATED, 0x00004000
+	flag_borderless_windowed_mode // Set to run program in borderless windowed mode, 0x00008000
+	flag_interlaced_hint          // Set to try enabling interlaced video format (for V3D), 0x00010000
 }
 
 // Trace log level
@@ -4130,8 +4131,8 @@ fn C.LoadFontFromMemory(&char, &u8, int, int, &int, int) Font
 // Load font from memory buffer, fileType refers to extension: i.e. '.ttf'
 @[inline]
 pub fn load_font_from_memory(file_type string, file_data &u8, data_size int, font_size int, codepoints &int, codepoint_count int) Font {
-	return C.LoadFontFromMemory(&char(file_type.str), file_data, data_size, font_size, codepoints,
-		codepoint_count)
+	return C.LoadFontFromMemory(&char(file_type.str), file_data, data_size, font_size,
+		codepoints, codepoint_count)
 }
 
 fn C.IsFontValid(Font) bool
@@ -4212,7 +4213,8 @@ fn C.DrawTextPro(Font, &char, Vector2, Vector2, f32, f32, f32, Color)
 // Draw text using Font and pro parameters (rotation)
 @[inline]
 pub fn draw_text_pro(font Font, text string, position Vector2, origin Vector2, rotation f32, font_size f32, spacing f32, tint Color) {
-	C.DrawTextPro(font, &char(text.str), position, origin, rotation, font_size, spacing, tint)
+	C.DrawTextPro(font, &char(text.str), position, origin, rotation, font_size, spacing,
+		tint)
 }
 
 fn C.DrawTextCodepoint(Font, int, Vector2, f32, Color)
