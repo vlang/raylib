@@ -347,6 +347,22 @@ app_dummy();
  */
 extern void android_main(struct android_app* app);
 
+__attribute__((weak)) void save_jni_android_V_raylib_onCreate(voidptr);
+
+__attribute__((weak)) void onDestroy_android_V_raylib(voidptr);
+__attribute__((weak)) void onStart_android_V_raylib(voidptr);
+__attribute__((weak)) void onResume_android_V_raylib(voidptr);
+__attribute__((weak)) void* onSaveInstanceState_android_V_raylib(voidptr, voidptr);
+__attribute__((weak)) void onPause_android_V_raylib(voidptr);
+__attribute__((weak)) void onStop_android_Vvoidptr_raylib(voidptr);
+__attribute__((weak)) void onConfigurationChanged_android_V_raylib(voidptr);
+__attribute__((weak)) void onLowMemory_android_V_raylib(voidptr);
+__attribute__((weak)) void onWindowFocusChanged_android_V_raylib(voidptr, int);
+__attribute__((weak)) void onNativeWindowCreated_android_V_raylib(voidptr, voidptr);
+__attribute__((weak)) void onNativeWindowDestroyed_android_V_raylib(voidptr, voidptr);
+__attribute__((weak)) void onInputQueueCreated_android_V_raylib(voidptr, voidptr);
+__attribute__((weak)) void onInputQueueDestroyed_android_V_raylib(voidptr, voidptr);
+
 #ifdef __cplusplus
 }
 #endif
