@@ -16,4 +16,3 @@ fn test_raylib() {
 
 	raylib.close_window()
 }
-
