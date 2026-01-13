@@ -328,6 +328,7 @@ pub type Model = C.Model
 
 // Model, meshes, materials and animation data
 pub struct C.Model {
+pub mut:
 	// Local transform matrix
 	transform Matrix
 	// Number of meshes
@@ -352,14 +353,15 @@ pub type ModelAnimation = C.ModelAnimation
 
 // ModelAnimation
 pub struct C.ModelAnimation {
+pub mut:
 	// Number of bones
-	bone_count int
+	boneCount int
 	// Number of animation frames
-	frame_count int
+	frameCount int
 	// Bones information (skeleton)
 	bones &BoneInfo
 	// Poses array by frame
-	frame_poses &&Transform
+	framePoses &&Transform
 	// Animation name
 	name [32]char
 }
