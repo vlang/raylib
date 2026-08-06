@@ -271,6 +271,15 @@ def generate(path: str, json_path: str, lib: str):
 			params = function.get("params", [])
 			has_params = len(params) > 0
 			for param in params:
+				# A plain "char *" is a mutable output
+				# buffer that the C function writes into (e.g.
+				# GuiTextBox()'s text). Converting those to V
+				# strings, like we do for "const char *", would let
+				# the C code write past a V string's allocation
+				# so we keep track of them here and expose
+				# them as raw pointers instead.
+				param["is_mutable_char_ptr"] = param["type"].strip() == "char *"
+
 				# If this arg represents an enum flag, then we
 				# should use that instead of an int type. We
 				# handle them here because we need more info
@@ -303,8 +312,17 @@ def generate(path: str, json_path: str, lib: str):
 			# Convert C-string arguments to V-strings to make the DX better :D
 			for index, arg in enumerate(params):
 				if arg["type"] == "&char":
-					call_args[index] = f"{arg["name"]}.str"
-					decl_args[index] = decl_args[index].replace("&char", "string")
+					if arg["is_mutable_char_ptr"]:
+						# Mutable output buffers can't safely be
+						# represented as immutable V strings, we
+						# expose the raw pointer instead. Callers are
+						# responsible for providing a large enough &
+						# null-terminated writable buffer.
+						call_args[index] = f"&char({arg["name"]})"
+						decl_args[index] = decl_args[index].replace("&char", "&u8")
+					else:
+						call_args[index] = f"{arg["name"]}.str"
+						decl_args[index] = decl_args[index].replace("&char", "string")
 
 			c_args = ", ".join(c_args)
 			decl_args = ", ".join(decl_args)

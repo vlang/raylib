@@ -755,17 +755,20 @@ pub fn gui_value_box(bounds Rectangle, text string, value &int, min_value int, m
 fn C.GuiValueBoxFloat(Rectangle, &char, &char, &f32, bool) int
 
 // Value box control for float values
+// text_value must point to a mutable, null-terminated buffer (it is written to when edit_mode is true)
 @[inline]
-pub fn gui_value_box_float(bounds Rectangle, text string, text_value string, value &f32, edit_mode bool) int {
-	return C.GuiValueBoxFloat(bounds, text.str, text_value.str, value, edit_mode)
+pub fn gui_value_box_float(bounds Rectangle, text string, text_value &u8, value &f32, edit_mode bool) int {
+	return C.GuiValueBoxFloat(bounds, text.str, &char(text_value), value, edit_mode)
 }
 
 fn C.GuiTextBox(Rectangle, &char, int, bool) int
 
 // Text Box control, updates input text
+// text must point to a mutable, null-terminated buffer at least text_size + 1 bytes long
+// (it is written to when edit_mode is true)
 @[inline]
-pub fn gui_text_box(bounds Rectangle, text string, text_size int, edit_mode bool) int {
-	return C.GuiTextBox(bounds, text.str, text_size, edit_mode)
+pub fn gui_text_box(bounds Rectangle, text &u8, text_size int, edit_mode bool) int {
+	return C.GuiTextBox(bounds, &char(text), text_size, edit_mode)
 }
 
 fn C.GuiSlider(Rectangle, &char, &char, &f32, f32, f32) int
@@ -843,10 +846,12 @@ pub fn gui_message_box(bounds Rectangle, title string, message string, buttons s
 fn C.GuiTextInputBox(Rectangle, &char, &char, &char, &char, int, &bool) int
 
 // Text Input Box control, ask for text, supports secret
+// text must point to a mutable, null-terminated buffer at least `ext_max_size + 1 bytes long
+// (it is written to when the user confirms input)
 @[inline]
-pub fn gui_text_input_box(bounds Rectangle, title string, message string, buttons string, text string, text_max_size int, secret_view_active &bool) int {
-	return C.GuiTextInputBox(bounds, title.str, message.str, buttons.str, text.str, text_max_size,
-		secret_view_active)
+pub fn gui_text_input_box(bounds Rectangle, title string, message string, buttons string, text &u8, text_max_size int, secret_view_active &bool) int {
+	return C.GuiTextInputBox(bounds, title.str, message.str, buttons.str, &char(text),
+		text_max_size, secret_view_active)
 }
 
 fn C.GuiColorPicker(Rectangle, &char, &Color) int
