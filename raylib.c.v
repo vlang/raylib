@@ -4447,8 +4447,8 @@ fn C.TextAppend(&char, &char, &int)
 
 // Append text at specific position and move cursor!
 @[inline]
-pub fn text_append(text string, append string, position &int) {
-	C.TextAppend(&char(text.str), &char(append.str), position)
+pub fn text_append(text &u8, append string, position &int) {
+	C.TextAppend(&char(text), &char(append.str), position)
 }
 
 fn C.TextFindIndex(&char, &char) int
