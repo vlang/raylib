@@ -104,6 +104,14 @@ flag_enums = {
 	"raylib": [ "ConfigFlags", "Gesture" ]
 }
 
+# These take a plain "char *" too, but only to free it. Their counterparts
+# (LoadFileText, LoadUTF8) hand back a V string wrapping that same pointer, so
+# they keep taking a string.
+unload_string_functions = [
+	"UnloadFileText",
+	"UnloadUTF8",
+]
+
 # Raylib uses integer types for its enum arguments, so we will convert those to
 # enum types for ease-of-use in V.
 functions_with_enum_args = {
@@ -278,7 +286,10 @@ def generate(path: str, json_path: str, lib: str):
 				# the C code write past a V string's allocation
 				# so we keep track of them here and expose
 				# them as raw pointers instead.
-				param["is_mutable_char_ptr"] = param["type"].strip() == "char *"
+				param["is_mutable_char_ptr"] = (
+					param["type"].strip() == "char *" and
+					c_name not in unload_string_functions
+				)
 
 				# If this arg represents an enum flag, then we
 				# should use that instead of an int type. We
