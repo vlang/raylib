@@ -104,6 +104,18 @@ flag_enums = {
 	"raylib": [ "ConfigFlags", "Gesture" ]
 }
 
+# Functions whose plain "char *" params are not output buffers, they keep
+# taking a V string instead of the &u8 used for writable buffers:
+# - UnloadFileText/UnloadUTF8 only free the pointer and LoadFileText/LoadUTF8
+#   hand that same pointer back wrapped in a V string.
+# - SaveFileText only reads its text; the missing const is an upstream typo
+#   (fixed to "const char *" after 5.5).
+char_ptr_keep_string = [
+	"UnloadFileText",
+	"UnloadUTF8",
+	"SaveFileText",
+]
+
 # Raylib uses integer types for its enum arguments, so we will convert those to
 # enum types for ease-of-use in V.
 functions_with_enum_args = {
@@ -271,6 +283,18 @@ def generate(path: str, json_path: str, lib: str):
 			params = function.get("params", [])
 			has_params = len(params) > 0
 			for param in params:
+				# A plain "char *" is a mutable output
+				# buffer that the C function writes into (e.g.
+				# GuiTextBox()'s text). Converting those to V
+				# strings, like we do for "const char *", would let
+				# the C code write past a V string's allocation
+				# so we keep track of them here and expose
+				# them as raw pointers instead.
+				param["is_mutable_char_ptr"] = (
+					param["type"].strip() == "char *" and
+					c_name not in char_ptr_keep_string
+				)
+
 				# If this arg represents an enum flag, then we
 				# should use that instead of an int type. We
 				# handle them here because we need more info
@@ -303,8 +327,17 @@ def generate(path: str, json_path: str, lib: str):
 			# Convert C-string arguments to V-strings to make the DX better :D
 			for index, arg in enumerate(params):
 				if arg["type"] == "&char":
-					call_args[index] = f"{arg["name"]}.str"
-					decl_args[index] = decl_args[index].replace("&char", "string")
+					if arg["is_mutable_char_ptr"]:
+						# Mutable output buffers can't safely be
+						# represented as immutable V strings, we
+						# expose the raw pointer instead. Callers are
+						# responsible for providing a large enough &
+						# null-terminated writable buffer.
+						call_args[index] = f"&char({arg["name"]})"
+						decl_args[index] = decl_args[index].replace("&char", "&u8")
+					else:
+						call_args[index] = f"{arg["name"]}.str"
+						decl_args[index] = decl_args[index].replace("&char", "string")
 
 			c_args = ", ".join(c_args)
 			decl_args = ", ".join(decl_args)
