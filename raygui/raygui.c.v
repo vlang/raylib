@@ -7,23 +7,23 @@ pub type GuiStyleProp = C.GuiStyleProp
 // NOTE: Used when exporting style as code for convenience
 pub struct C.GuiStyleProp {
 	// Control identifier
-	control_id u16
+	controlId u16
 	// Property identifier
-	property_id u16
+	propertyId u16
 	// Property value
-	property_value int
+	propertyValue int
 }
 
 pub type GuiTextStyle = C.GuiTextStyle
 
 // NOTE: Text style is defined by control
 pub struct C.GuiTextStyle {
-	size         u32
-	char_spacing int
-	line_spacing int
-	alignment_h  int
-	alignment_v  int
-	padding      int
+	size        u32
+	charSpacing int
+	lineSpacing int
+	alignmentH  int
+	alignmentV  int
+	padding     int
 }
 
 // Gui control state
@@ -77,16 +77,16 @@ pub enum GuiControl {
 
 // Gui base properties for every control
 pub enum GuiControlProperty {
-	border_color_normal   = 0  // Control border color in STATE_NORMAL
-	base_color_normal     = 1  // Control base color in STATE_NORMAL
-	text_color_normal     = 2  // Control text color in STATE_NORMAL
-	border_color_focused  = 3  // Control border color in STATE_FOCUSED
-	base_color_focused    = 4  // Control base color in STATE_FOCUSED
-	text_color_focused    = 5  // Control text color in STATE_FOCUSED
-	border_color_pressed  = 6  // Control border color in STATE_PRESSED
-	base_color_pressed    = 7  // Control base color in STATE_PRESSED
-	text_color_pressed    = 8  // Control text color in STATE_PRESSED
-	border_color_disabled = 9  // Control border color in STATE_DISABLED
+	border_color_normal   = 0 // Control border color in STATE_NORMAL
+	base_color_normal     = 1 // Control base color in STATE_NORMAL
+	text_color_normal     = 2 // Control text color in STATE_NORMAL
+	border_color_focused  = 3 // Control border color in STATE_FOCUSED
+	base_color_focused    = 4 // Control base color in STATE_FOCUSED
+	text_color_focused    = 5 // Control text color in STATE_FOCUSED
+	border_color_pressed  = 6 // Control border color in STATE_PRESSED
+	base_color_pressed    = 7 // Control base color in STATE_PRESSED
+	text_color_pressed    = 8 // Control text color in STATE_PRESSED
+	border_color_disabled = 9 // Control border color in STATE_DISABLED
 	base_color_disabled   = 10 // Control base color in STATE_DISABLED
 	text_color_disabled   = 11 // Control text color in STATE_DISABLED
 	border_width          = 12 // Control border size, 0 for no border
@@ -579,9 +579,8 @@ fn C.GuiIconText(int, &char) &char
 // Get text with icon id prepended (if supported)
 @[inline]
 pub fn gui_icon_text(icon_id int, text string) string {
-	unsafe {
-		return C.GuiIconText(icon_id, text.str).vstring()
-	}
+	unsafe { return C.GuiIconText(icon_id, text.str).vstring()
+	 }
 }
 
 fn C.GuiSetIconScale(int)
@@ -648,11 +647,11 @@ pub fn gui_panel(bounds Rectangle, text string) int {
 	return C.GuiPanel(bounds, text.str)
 }
 
-fn C.GuiTabBar(Rectangle, &&char, int, &int) int
+fn C.GuiTabBar(Rectangle, &&char, int, &i32) int
 
 // Tab Bar control, returns TAB to be closed or -1
 @[inline]
-pub fn gui_tab_bar(bounds Rectangle, text &&char, count int, active &int) int {
+pub fn gui_tab_bar(bounds Rectangle, text &&char, count int, active &i32) int {
 	return C.GuiTabBar(bounds, text, count, active)
 }
 
@@ -696,19 +695,19 @@ pub fn gui_toggle(bounds Rectangle, text string, active &bool) int {
 	return C.GuiToggle(bounds, text.str, active)
 }
 
-fn C.GuiToggleGroup(Rectangle, &char, &int) int
+fn C.GuiToggleGroup(Rectangle, &char, &i32) int
 
 // Toggle Group control
 @[inline]
-pub fn gui_toggle_group(bounds Rectangle, text string, active &int) int {
+pub fn gui_toggle_group(bounds Rectangle, text string, active &i32) int {
 	return C.GuiToggleGroup(bounds, text.str, active)
 }
 
-fn C.GuiToggleSlider(Rectangle, &char, &int) int
+fn C.GuiToggleSlider(Rectangle, &char, &i32) int
 
 // Toggle Slider control
 @[inline]
-pub fn gui_toggle_slider(bounds Rectangle, text string, active &int) int {
+pub fn gui_toggle_slider(bounds Rectangle, text string, active &i32) int {
 	return C.GuiToggleSlider(bounds, text.str, active)
 }
 
@@ -720,35 +719,35 @@ pub fn gui_check_box(bounds Rectangle, text string, checked &bool) int {
 	return C.GuiCheckBox(bounds, text.str, checked)
 }
 
-fn C.GuiComboBox(Rectangle, &char, &int) int
+fn C.GuiComboBox(Rectangle, &char, &i32) int
 
 // Combo Box control
 @[inline]
-pub fn gui_combo_box(bounds Rectangle, text string, active &int) int {
+pub fn gui_combo_box(bounds Rectangle, text string, active &i32) int {
 	return C.GuiComboBox(bounds, text.str, active)
 }
 
-fn C.GuiDropdownBox(Rectangle, &char, &int, bool) int
+fn C.GuiDropdownBox(Rectangle, &char, &i32, bool) int
 
 // Dropdown Box control
 @[inline]
-pub fn gui_dropdown_box(bounds Rectangle, text string, active &int, edit_mode bool) int {
+pub fn gui_dropdown_box(bounds Rectangle, text string, active &i32, edit_mode bool) int {
 	return C.GuiDropdownBox(bounds, text.str, active, edit_mode)
 }
 
-fn C.GuiSpinner(Rectangle, &char, &int, int, int, bool) int
+fn C.GuiSpinner(Rectangle, &char, &i32, int, int, bool) int
 
 // Spinner control
 @[inline]
-pub fn gui_spinner(bounds Rectangle, text string, value &int, min_value int, max_value int, edit_mode bool) int {
+pub fn gui_spinner(bounds Rectangle, text string, value &i32, min_value int, max_value int, edit_mode bool) int {
 	return C.GuiSpinner(bounds, text.str, value, min_value, max_value, edit_mode)
 }
 
-fn C.GuiValueBox(Rectangle, &char, &int, int, int, bool) int
+fn C.GuiValueBox(Rectangle, &char, &i32, int, int, bool) int
 
 // Value Box control, updates input text with numbers
 @[inline]
-pub fn gui_value_box(bounds Rectangle, text string, value &int, min_value int, max_value int, edit_mode bool) int {
+pub fn gui_value_box(bounds Rectangle, text string, value &i32, min_value int, max_value int, edit_mode bool) int {
 	return C.GuiValueBox(bounds, text.str, value, min_value, max_value, edit_mode)
 }
 
@@ -816,19 +815,19 @@ pub fn gui_grid(bounds Rectangle, text string, spacing f32, subdivs int, mouse_c
 	return C.GuiGrid(bounds, text.str, spacing, subdivs, mouse_cell)
 }
 
-fn C.GuiListView(Rectangle, &char, &int, &int) int
+fn C.GuiListView(Rectangle, &char, &i32, &i32) int
 
 // List View control
 @[inline]
-pub fn gui_list_view(bounds Rectangle, text string, scroll_index &int, active &int) int {
+pub fn gui_list_view(bounds Rectangle, text string, scroll_index &i32, active &i32) int {
 	return C.GuiListView(bounds, text.str, scroll_index, active)
 }
 
-fn C.GuiListViewEx(Rectangle, &&char, int, &int, &int, &int) int
+fn C.GuiListViewEx(Rectangle, &&char, int, &i32, &i32, &i32) int
 
 // List View with extended parameters
 @[inline]
-pub fn gui_list_view_ex(bounds Rectangle, text &&char, count int, scroll_index &int, active &int, focus &int) int {
+pub fn gui_list_view_ex(bounds Rectangle, text &&char, count int, scroll_index &i32, active &i32, focus &i32) int {
 	return C.GuiListViewEx(bounds, text, count, scroll_index, active, focus)
 }
 
@@ -845,8 +844,7 @@ fn C.GuiTextInputBox(Rectangle, &char, &char, &char, &char, int, &bool) int
 // Text Input Box control, ask for text, supports secret
 @[inline]
 pub fn gui_text_input_box(bounds Rectangle, title string, message string, buttons string, text string, text_max_size int, secret_view_active &bool) int {
-	return C.GuiTextInputBox(bounds, title.str, message.str, buttons.str, text.str, text_max_size,
-		secret_view_active)
+	return C.GuiTextInputBox(bounds, title.str, message.str, buttons.str, text.str, text_max_size, secret_view_active)
 }
 
 fn C.GuiColorPicker(Rectangle, &char, &Color) int
